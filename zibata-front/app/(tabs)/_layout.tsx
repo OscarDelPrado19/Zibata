@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
+import { TabBarConfig, TextConfig } from '@/constants/tab-bar-config';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
@@ -24,25 +25,25 @@ export default function TabLayout() {
           left: 0,
           right: 0,
           elevation: 0,
-          backgroundColor: isDark ? '#1F2937' : '#FFFFFF',
+          backgroundColor: isDark ? TabBarConfig.colors.dark.background : TabBarConfig.colors.light.background,
           borderTopWidth: 1,
-          borderTopColor: isDark ? '#374151' : '#E5E7EB',
-          height: 70,
-          paddingBottom: 4,
-          paddingTop: 4,
-          shadowColor: isDark ? '#000000' : '#000000',
+          borderTopColor: isDark ? TabBarConfig.colors.dark.border : TabBarConfig.colors.light.border,
+          height: TabBarConfig.dimensions.height,
+          paddingBottom: TabBarConfig.dimensions.paddingBottom,
+          paddingTop: TabBarConfig.dimensions.paddingTop,
+          shadowColor: isDark ? TabBarConfig.shadows.dark.shadowColor : TabBarConfig.shadows.light.shadowColor,
           shadowOffset: {
             width: 0,
             height: -2,
           },
-          shadowOpacity: isDark ? 0.3 : 0.1,
+          shadowOpacity: isDark ? TabBarConfig.shadows.dark.shadowOpacity : TabBarConfig.shadows.light.shadowOpacity,
           shadowRadius: 3,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: '600',
-          marginTop: 2,
-          letterSpacing: 0.3,
+          fontSize: TextConfig.tabLabel.fontSize,
+          fontWeight: TextConfig.tabLabel.fontWeight,
+          marginTop: TextConfig.tabLabel.marginTop,
+          letterSpacing: TextConfig.tabLabel.letterSpacing,
         },
         tabBarItemStyle: {
           paddingVertical: 4,
@@ -94,7 +95,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      
+
       <Tabs.Screen
         name="menu"
         options={{

@@ -18,6 +18,7 @@ const MAPPING = {
   'car.fill': 'directions-car',
   'person.fill': 'person',
   'line.3.horizontal': 'menu',
+  'exclamationmark.triangle.fill': 'warning',
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',

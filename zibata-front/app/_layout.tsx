@@ -1,5 +1,6 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
+import type { StatusBarStyle } from 'expo-status-bar';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
@@ -7,10 +8,12 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export const unstable_settings = {
   anchor: '(tabs)',
-};
+} as const;
 
-export default function RootLayout() {
+export default function RootLayout(): React.ReactElement {
   const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+  const statusBarStyle: StatusBarStyle = isDark ? 'light' : 'dark';
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -23,7 +26,7 @@ export default function RootLayout() {
         />
         <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
       </Stack>
-      <StatusBar style="auto" hidden={false} />
+      <StatusBar style={statusBarStyle} hidden={false} />
     </ThemeProvider>
   );
 }
