@@ -19,6 +19,8 @@ const MAPPING = {
   'person.fill': 'person',
   'line.3.horizontal': 'menu',
   'exclamationmark.triangle.fill': 'warning',
+  'paperclip': 'attach-file',
+  'megaphone.fill': 'campaign',
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
