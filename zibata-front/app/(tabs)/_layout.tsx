@@ -95,6 +95,22 @@ export default function TabLayout() {
           ),
         }}
       />
+      
+      <Tabs.Screen
+        name="incidencias"
+        options={{
+          title: 'Incidencias',
+          tabBarIcon: ({ color, focused }) => (
+            <View style={[styles.iconContainer, focused && styles.iconContainerFocused]}>
+              <IconSymbol
+                size={26}
+                name="exclamationmark.triangle.fill"
+                color={color}
+              />
+            </View>
+          ),
+        }}
+      />
 
       <Tabs.Screen
         name="menu"

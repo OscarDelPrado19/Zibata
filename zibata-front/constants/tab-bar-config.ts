@@ -36,7 +36,7 @@ export const TextConfig = {
   tabLabel: {
     fontSize: 11,
     fontWeight: '600' as const,
-    marginTop: 2,
+    marginTop: 6,
     letterSpacing: 0.3,
   },
 } as const;
