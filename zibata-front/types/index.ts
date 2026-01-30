@@ -2,16 +2,13 @@
  * Tipos compartidos para la aplicación
  */
 
+export type IncidentType = 'MANTENIMIENTO' | 'FALLA ENERGIA' | 'OTRO';
+
 export interface Incident {
   id: string;
   code: string;
-  type: 'MANTENIMIENTO' | 'FALLA ENERGIA' | 'OTRO';
+  type: IncidentType;
   date: string;
-}
-
-export interface ScreenProps {
-  navigation: any;
-  route: any;
 }
 
 export type ColorScheme = 'light' | 'dark';

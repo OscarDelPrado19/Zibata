@@ -24,6 +24,7 @@ export default function RootLayout(): React.ReactElement {
             headerShown: false,
           }}
         />
+        <Stack.Screen name="modal/crear-incidencia" options={{ presentation: 'modal', headerShown: false, title: 'Crear Incidencia' }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
       </Stack>
       <StatusBar style={statusBarStyle} hidden={false} />

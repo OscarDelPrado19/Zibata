@@ -23,7 +23,8 @@
       "navigationBar": {
         "barStyle": "light-content",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.zibatafront"
     },
     "web": {
       "output": "static",
