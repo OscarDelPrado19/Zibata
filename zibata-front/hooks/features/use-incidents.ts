@@ -9,17 +9,31 @@ import { useCallback, useState } from 'react';
 
 interface UseIncidentsReturn {
   incidents: Incident[];
+  selectedIncident: Incident | null;
+  showDetailModal: boolean;
   handleIncidentPress: (id: string) => void;
+  handleCloseDetailModal: () => void;
   handleAddIncident: () => void;
 }
 
 export const useIncidents = (): UseIncidentsReturn => {
   const [incidents] = useState<Incident[]>(INITIAL_INCIDENTS);
+  const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null);
+  const [showDetailModal, setShowDetailModal] = useState<boolean>(false);
   const router = useRouter();
 
   const handleIncidentPress = useCallback((id: string): void => {
-    console.log('Incident pressed:', id);
-  }, [router]);
+    const incident = incidents.find((inc) => inc.id === id);
+    if (incident) {
+      setSelectedIncident(incident);
+      setShowDetailModal(true);
+    }
+  }, [incidents]);
+
+  const handleCloseDetailModal = useCallback((): void => {
+    setShowDetailModal(false);
+    setSelectedIncident(null);
+  }, []);
 
   const handleAddIncident = useCallback((): void => {
     router.navigate('/modal/crear-incidencia');
@@ -27,7 +41,10 @@ export const useIncidents = (): UseIncidentsReturn => {
 
   return {
     incidents,
+    selectedIncident,
+    showDetailModal,
     handleIncidentPress,
+    handleCloseDetailModal,
     handleAddIncident,
   };
 };

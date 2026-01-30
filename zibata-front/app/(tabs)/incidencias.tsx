@@ -1,4 +1,5 @@
 import {
+  IncidentDetailModal,
   IncidentFAB,
   IncidentHeader,
   IncidentList,
@@ -15,7 +16,14 @@ export default function IncidenciasScreen(): React.ReactElement {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const colors = IncidentsColors[isDark ? 'dark' : 'light'];
-  const { incidents, handleIncidentPress, handleAddIncident } = useIncidents();
+  const {
+    incidents,
+    selectedIncident,
+    showDetailModal,
+    handleIncidentPress,
+    handleCloseDetailModal,
+    handleAddIncident,
+  } = useIncidents();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -33,6 +41,13 @@ export default function IncidenciasScreen(): React.ReactElement {
           textColor={colors.fabText}
         />
       </ThemedView>
+
+      <IncidentDetailModal
+        visible={showDetailModal}
+        incident={selectedIncident}
+        onClose={handleCloseDetailModal}
+        isDark={isDark}
+      />
     </SafeAreaView>
   );
 }
