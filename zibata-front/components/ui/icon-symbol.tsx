@@ -28,6 +28,7 @@ const MAPPING = {
   'video.fill': 'videocam',
   'checkmark.circle.fill': 'check',
   'play.fill': 'play-arrow',
+  'xmark': 'close',
 } as IconMapping;
 
 /**
