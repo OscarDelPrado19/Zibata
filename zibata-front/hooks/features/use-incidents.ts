@@ -4,7 +4,8 @@
 
 import { INITIAL_INCIDENTS } from '@/constants/features/incidents';
 import type { Incident } from '@/types';
-import { useCallback } from 'react';
+import { useRouter } from 'expo-router';
+import { useCallback, useState } from 'react';
 
 interface UseIncidentsReturn {
   incidents: Incident[];
@@ -13,21 +14,16 @@ interface UseIncidentsReturn {
 }
 
 export const useIncidents = (): UseIncidentsReturn => {
-  const incidents = INITIAL_INCIDENTS;
+  const [incidents] = useState<Incident[]>(INITIAL_INCIDENTS);
+  const router = useRouter();
 
   const handleIncidentPress = useCallback((id: string): void => {
     console.log('Incident pressed:', id);
-    // TODO: Implementar navegación a detalle de incidencia
-    // const router = useRouter();
-    // router.push(`/incidents/${id}`);
-  }, []);
+  }, [router]);
 
   const handleAddIncident = useCallback((): void => {
-    console.log('Add incident');
-    // TODO: Implementar formulario para agregar incidencia
-    // const router = useRouter();
-    // router.push('/incidents/new');
-  }, []);
+    router.navigate('/modal/crear-incidencia');
+  }, [router]);
 
   return {
     incidents,

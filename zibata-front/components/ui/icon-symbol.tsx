@@ -24,6 +24,10 @@ const MAPPING = {
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
+  'camera.fill': 'photo-camera',
+  'video.fill': 'videocam',
+  'checkmark.circle.fill': 'check',
+  'play.fill': 'play-arrow',
 } as IconMapping;
 
 /**
