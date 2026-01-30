@@ -4,6 +4,7 @@ import type { StatusBarStyle } from 'expo-status-bar';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
+import { IncidentsProvider } from '@/hooks/features/incidents-store';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export const unstable_settings = {
@@ -17,17 +18,19 @@ export default function RootLayout(): React.ReactElement {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen
-          name="(tabs)"
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen name="modal/crear-incidencia" options={{ presentation: 'modal', headerShown: false, title: 'Crear Incidencia' }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style={statusBarStyle} hidden={false} />
+      <IncidentsProvider>
+        <Stack>
+          <Stack.Screen
+            name="(tabs)"
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen name="modal/crear-incidencia" options={{ presentation: 'modal', headerShown: false, title: 'Crear Incidencia' }} />
+          <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+        </Stack>
+        <StatusBar style={statusBarStyle} hidden={false} />
+      </IncidentsProvider>
     </ThemeProvider>
   );
 }

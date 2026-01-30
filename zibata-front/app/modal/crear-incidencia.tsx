@@ -6,7 +6,9 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { INCIDENT_TYPES, IncidentsColors } from '@/constants/features/incidents';
+import { useIncidentsStore } from '@/hooks/features/incidents-store';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import type { Coordinates } from '@/types';
 import { ResizeMode, Video } from 'expo-av';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
@@ -14,32 +16,11 @@ import React, { useState } from 'react';
 import { FlatList, Image, Modal, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-type Coordinates = {
-  latitude: number;
-  longitude: number;
-};
-
 type MediaItem = {
   type: 'image' | 'video';
   uri: string;
 };
 
-type IncidentPayload = {
-  category: string;
-  reason: string;
-  description: string;
-  coordinates: Coordinates | null;
-  images: string[];
-  videos: string[];
-  date: string;
-};
-
-type NativeEventCoordinates = {
-  nativeEvent: {
-    locationX: number;
-    locationY: number;
-  };
-};
 
 const CATEGORY_OPTIONS = ['EXTERNO', 'INTERNO'] as const;
 const REASON_OPTIONS = [INCIDENT_TYPES.MAINTENANCE, INCIDENT_TYPES.POWER_FAILURE, INCIDENT_TYPES.OTHER] as const;
@@ -67,6 +48,7 @@ function VideoPreviewItem({ uri }: { uri: string }): React.ReactElement {
 
 export default function CrearIncidenciaModal(): React.ReactElement {
   const router = useRouter();
+  const { addIncident } = useIncidentsStore();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const colors = IncidentsColors[isDark ? 'dark' : 'light'];
@@ -80,6 +62,13 @@ export default function CrearIncidenciaModal(): React.ReactElement {
   const [showCategoryModal, setShowCategoryModal] = useState<boolean>(false);
   const [showReasonModal, setShowReasonModal] = useState<boolean>(false);
   const [showLocationPicker, setShowLocationPicker] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>('');
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+
+  const openAlert = (message: string): void => {
+    setAlertMessage(message);
+    setShowAlert(true);
+  };
 
   const handlePickImage = async (): Promise<void> => {
     try {
@@ -97,7 +86,7 @@ export default function CrearIncidenciaModal(): React.ReactElement {
       }
     } catch (error) {
       console.warn('Error al seleccionar imágenes:', error);
-      alert('No se pudo seleccionar imágenes');
+      openAlert('No se pudo seleccionar imágenes. Intenta de nuevo.');
     }
   };
 
@@ -113,16 +102,8 @@ export default function CrearIncidenciaModal(): React.ReactElement {
       }
     } catch (error) {
       console.warn('Error al seleccionar video:', error);
-      alert('No se pudo seleccionar video');
+      openAlert('No se pudo seleccionar video. Intenta de nuevo.');
     }
-  };
-
-  // Código para marcar punto en mapa-placeholder
-  const handleMapPress = (evt: NativeEventCoordinates): void => {
-    const { locationX, locationY } = evt.nativeEvent;
-    const latitude = 19.5 + locationY / 1000;
-    const longitude = -99.2 + locationX / 1000;
-    setCoordinates({ latitude, longitude });
   };
 
   const handleLocationSelect = (newCoordinates: Coordinates): void => {
@@ -130,16 +111,35 @@ export default function CrearIncidenciaModal(): React.ReactElement {
   };
 
   const handleSubmit = (): void => {
-    const payload: IncidentPayload = {
+    if (!category) {
+      openAlert('Selecciona una categoría para continuar.');
+      return;
+    }
+
+    if (!reason) {
+      openAlert('Selecciona un motivo para continuar.');
+      return;
+    }
+
+    if (!description.trim()) {
+      openAlert('Agrega una descripción para continuar.');
+      return;
+    }
+
+    if (!coordinates) {
+      openAlert('Selecciona una ubicación en el mapa para continuar.');
+      return;
+    }
+
+    addIncident({
       category,
       reason,
       description,
       coordinates,
       images,
       videos,
-      date: new Date().toISOString(),
-    };
-    console.log('Incidencia a enviar (guardada localmente):', payload);
+      reporter: 'Residente',
+    });
     router.back();
   };
 
@@ -276,6 +276,26 @@ export default function CrearIncidenciaModal(): React.ReactElement {
             />
             <TouchableOpacity onPress={() => setShowReasonModal(false)} style={styles.optionCancel}>
               <ThemedText>Cancelar</ThemedText>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={showAlert} transparent animationType="fade">
+        <View style={styles.alertOverlay}>
+          <View style={[styles.alertCard, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}
+          >
+            <View style={styles.alertIconWrapper}>
+              <IconSymbol name="exclamationmark.triangle.fill" size={28} color="#F59E0B" />
+            </View>
+            <ThemedText type="defaultSemiBold" style={styles.alertTitle}>Atención</ThemedText>
+            <ThemedText style={styles.alertMessage}>{alertMessage}</ThemedText>
+            <TouchableOpacity
+              onPress={() => setShowAlert(false)}
+              style={[styles.alertButton, { backgroundColor: colors.fabBg }]}
+              activeOpacity={0.9}
+            >
+              <ThemedText style={[styles.alertButtonText, { color: colors.fabText }]}>Entendido</ThemedText>
             </TouchableOpacity>
           </View>
         </View>
@@ -458,5 +478,45 @@ const styles = StyleSheet.create({
   optionCancel: {
     paddingVertical: 12,
     alignItems: 'center',
+  },
+  alertOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    padding: 24,
+  },
+  alertCard: {
+    width: '100%',
+    borderRadius: 16,
+    padding: 20,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  alertIconWrapper: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  alertTitle: {
+    marginBottom: 6,
+    fontSize: 16,
+  },
+  alertMessage: {
+    textAlign: 'center',
+    opacity: 0.8,
+    marginBottom: 16,
+  },
+  alertButton: {
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+    borderRadius: 10,
+  },
+  alertButtonText: {
+    fontSize: 14,
   },
 });
