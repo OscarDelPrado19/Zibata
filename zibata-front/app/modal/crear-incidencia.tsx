@@ -1,3 +1,4 @@
+import { CheckmarkButton } from '@/components/features/incidents/checkmark-button';
 import { IncidentHeader } from '@/components/features/incidents/incident-header';
 import { LocationPicker } from '@/components/features/incidents/location-picker';
 import { LocationPreview } from '@/components/features/incidents/location-preview';
@@ -233,13 +234,13 @@ export default function CrearIncidenciaModal(): React.ReactElement {
         <View style={{ height: 80 }} />
       </ScrollView>
 
-      <TouchableOpacity
+      <CheckmarkButton
         onPress={handleSubmit}
-        style={[styles.submitFab, { backgroundColor: colors.fabBg }]}
-        activeOpacity={0.9}
-      >
-        <IconSymbol name="checkmark.circle.fill" size={32} color={colors.fabText} />
-      </TouchableOpacity>
+        backgroundColor={colors.fabBg}
+        iconColor={colors.fabText}
+        iconSize={32}
+        style={styles.submitFab}
+      />
 
       {/* Modales simples para seleccionar categoría/motivo */}
       <Modal visible={showCategoryModal} transparent animationType="slide">
@@ -439,12 +440,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     alignSelf: 'center',
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 6,
   },
   optionModalOverlay: {
     flex: 1,

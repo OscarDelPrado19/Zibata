@@ -4,11 +4,36 @@
 
 export type IncidentType = 'MANTENIMIENTO' | 'FALLA ENERGIA' | 'OTRO';
 
+export type IncidentStatus = 'ABIERTO' | 'EN PROGRESO' | 'CERRADO';
+
+export type Coordinates = {
+  latitude: number;
+  longitude: number;
+};
+
+export type TimelineEvent = {
+  id: string;
+  date: string;
+  description: string;
+};
+
 export interface Incident {
   id: string;
   code: string;
   type: IncidentType;
   date: string;
+  // Campos extendidos para detalle
+  category?: string;
+  reason?: string;
+  description?: string;
+  status?: IncidentStatus;
+  coordinates?: Coordinates | null;
+  images?: string[];
+  videos?: string[];
+  createdAt?: string;
+  updatedAt?: string;
+  timeline?: TimelineEvent[];
+  reporter?: string;
 }
 
 export type ColorScheme = 'light' | 'dark';
