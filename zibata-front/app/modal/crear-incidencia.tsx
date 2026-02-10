@@ -12,9 +12,10 @@ import type { Coordinates } from '@/types';
 import { ResizeMode, Video } from 'expo-av';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { FlatList, Image, Modal, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type MediaItem = {
   type: 'image' | 'video';
@@ -52,6 +53,7 @@ export default function CrearIncidenciaModal(): React.ReactElement {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const colors = IncidentsColors[isDark ? 'dark' : 'light'];
+  const insets = useSafeAreaInsets();
 
   const [category, setCategory] = useState<string>('');
   const [reason, setReason] = useState<string>('');
@@ -145,6 +147,7 @@ export default function CrearIncidenciaModal(): React.ReactElement {
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+      <StatusBar style="light" backgroundColor={colors.headerBg} />
       <ThemedView style={{ flex: 1 }}>
         <IncidentHeader backgroundColor={colors.headerBg} iconColor={colors.text} />
 
@@ -239,7 +242,7 @@ export default function CrearIncidenciaModal(): React.ReactElement {
         backgroundColor={colors.fabBg}
         iconColor={colors.fabText}
         iconSize={32}
-        style={styles.submitFab}
+        style={[styles.submitFab, { bottom: insets.bottom + 20 }]}
       />
 
       {/* Modales simples para seleccionar categoría/motivo */}
@@ -458,7 +461,6 @@ const styles = StyleSheet.create({
   },
   submitFab: {
     position: 'absolute',
-    bottom: 20,
     alignSelf: 'center',
   },
   optionModalOverlay: {
