@@ -6,6 +6,7 @@ import { IconSymbol } from '@/components/ui/icon-symbol';
 import { IncidentsColors } from '@/constants/features/incidents';
 import type { Incident } from '@/types';
 import { ResizeMode, Video } from 'expo-av';
+import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import {
     Dimensions,
@@ -18,7 +19,7 @@ import {
     View,
 } from 'react-native';
 import ImageViewing from 'react-native-image-viewing';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 
 interface IncidentDetailModalProps {
@@ -124,6 +125,7 @@ export function IncidentDetailModal({
   const [previewUri, setPreviewUri] = useState<string>('');
   const [previewType, setPreviewType] = useState<'image' | 'video'>('image');
   const colors = IncidentsColors[isDark ? 'dark' : 'light'];
+  const insets = useSafeAreaInsets();
 
   if (!incident) {
     return <></>;
@@ -231,12 +233,14 @@ export function IncidentDetailModal({
   ];
 
   return (
-    <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
+    <Modal visible={visible} animationType="slide" onRequestClose={onClose} statusBarTranslucent>
+      <StatusBar style="light" backgroundColor={colors.headerBg} />
       <SafeAreaView
-        style={[styles.container, { backgroundColor: isDark ? '#11182700' : '#ffffff00' }]}
-        edges={['top']}
+        style={styles.container}
+        edges={['left', 'right', 'bottom']}
       >
         <ThemedView style={{ flex: 1 }}>
+          <View style={{ height: insets.top, backgroundColor: colors.headerBg }} />
           <IncidentHeader
             backgroundColor={colors.headerBg}
             iconColor={colors.text}
@@ -451,7 +455,7 @@ export function IncidentDetailModal({
           </Modal>
 
           {/* Close Button */}
-          <View style={styles.closeButtonContainer}>
+          <View style={[styles.closeButtonContainer, { bottom: 20 }]}>
             <CheckmarkButton
               onPress={onClose}
               backgroundColor={colors.fabBg}
@@ -670,7 +674,6 @@ const styles = StyleSheet.create({
   },
   closeButtonContainer: {
     position: 'absolute',
-    bottom: 20,
     left: 0,
     right: 0,
     alignItems: 'center',
