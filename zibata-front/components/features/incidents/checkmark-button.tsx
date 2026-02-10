@@ -4,14 +4,15 @@
 
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import React from 'react';
-import { StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 
 interface CheckmarkButtonProps {
   onPress: () => void;
   backgroundColor: string;
   iconColor: string;
   iconSize?: number;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
+  icon?: React.ComponentProps<typeof IconSymbol>['name'];
 }
 
 export const CheckmarkButton: React.FC<CheckmarkButtonProps> = ({
@@ -20,6 +21,7 @@ export const CheckmarkButton: React.FC<CheckmarkButtonProps> = ({
   iconColor,
   iconSize = 32,
   style,
+  icon = 'checkmark.circle.fill',
 }) => {
   return (
     <TouchableOpacity
@@ -33,7 +35,7 @@ export const CheckmarkButton: React.FC<CheckmarkButtonProps> = ({
       ]}
       activeOpacity={0.9}
     >
-      <IconSymbol name="checkmark.circle.fill" size={iconSize} color={iconColor} />
+      <IconSymbol name={icon} size={iconSize} color={iconColor} />
     </TouchableOpacity>
   );
 };
