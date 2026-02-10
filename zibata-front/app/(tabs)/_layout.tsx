@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
@@ -11,6 +11,7 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
+  const insets = useSafeAreaInsets();
 
   return (
     <Tabs
@@ -20,16 +21,12 @@ export default function TabLayout() {
         tabBarActiveTintColor: '#3f3f3f',
         tabBarInactiveTintColor: Colors[colorScheme ?? 'light'].tabIconDefault,
         tabBarStyle: {
-          position: 'relative',
-          bottom: 0,
-          left: 0,
-          right: 0,
           elevation: 0,
           backgroundColor: isDark ? TabBarConfig.colors.dark.background : TabBarConfig.colors.light.background,
           borderTopWidth: 1,
           borderTopColor: isDark ? TabBarConfig.colors.dark.border : TabBarConfig.colors.light.border,
-          height: TabBarConfig.dimensions.height,
-          paddingBottom: TabBarConfig.dimensions.paddingBottom,
+          height: TabBarConfig.dimensions.height + insets.bottom,
+          paddingBottom: insets.bottom + TabBarConfig.dimensions.paddingBottom,
           paddingTop: TabBarConfig.dimensions.paddingTop,
           shadowColor: isDark ? TabBarConfig.shadows.dark.shadowColor : TabBarConfig.shadows.light.shadowColor,
           shadowOffset: {

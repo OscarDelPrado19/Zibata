@@ -8,6 +8,7 @@ import { ThemedView } from '@/components/themed-view';
 import { IncidentsColors } from '@/constants/features/incidents';
 import { useIncidents } from '@/hooks/features/use-incidents';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -26,7 +27,8 @@ export default function IncidenciasScreen(): React.ReactElement {
   } = useIncidents();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+      <StatusBar style="light" backgroundColor={colors.headerBg} />
       <ThemedView style={{ flex: 1 }}>
         <IncidentHeader backgroundColor={colors.headerBg} iconColor={colors.text} />
         <IncidentList

@@ -6,7 +6,8 @@ import { IconSymbol } from '@/components/ui/icon-symbol';
 import { IncidentsColors } from '@/constants/features/incidents';
 import type { Incident } from '@/types';
 import { ResizeMode, Video } from 'expo-av';
-import React from 'react';
+import { StatusBar } from 'expo-status-bar';
+import React, { useState } from 'react';
 import {
     Dimensions,
     FlatList,
@@ -14,9 +15,11 @@ import {
     Modal,
     ScrollView,
     StyleSheet,
+    TouchableOpacity,
     View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import ImageViewing from 'react-native-image-viewing';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 
 interface IncidentDetailModalProps {
@@ -26,7 +29,7 @@ interface IncidentDetailModalProps {
   isDark: boolean;
 }
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const STATUS_COLORS: Record<string, { bg: string; text: string; border: string }> = {
   ABIERTO: { bg: '#FEF3C7', text: '#92400E', border: '#FCD34D' },
@@ -118,7 +121,11 @@ export function IncidentDetailModal({
   onClose,
   isDark,
 }: IncidentDetailModalProps): React.ReactElement {
+  const [previewVisible, setPreviewVisible] = useState<boolean>(false);
+  const [previewUri, setPreviewUri] = useState<string>('');
+  const [previewType, setPreviewType] = useState<'image' | 'video'>('image');
   const colors = IncidentsColors[isDark ? 'dark' : 'light'];
+  const insets = useSafeAreaInsets();
 
   if (!incident) {
     return <></>;
@@ -137,6 +144,17 @@ export function IncidentDetailModal({
     });
   };
 
+  const openPreview = (uri: string, type: 'image' | 'video'): void => {
+    setPreviewUri(uri);
+    setPreviewType(type);
+    setPreviewVisible(true);
+  };
+
+  const closePreview = (): void => {
+    setPreviewVisible(false);
+    setPreviewUri('');
+  };
+
   const renderMediaItem = ({
     item,
     index,
@@ -147,7 +165,11 @@ export function IncidentDetailModal({
     const isVideo = incident.videos?.includes(item) ?? false;
 
     return (
-      <View style={styles.mediaItem}>
+      <TouchableOpacity
+        style={styles.mediaItem}
+        activeOpacity={0.85}
+        onPress={() => openPreview(item, isVideo ? 'video' : 'image')}
+      >
         {isVideo ? (
           <View style={styles.videoContainer}>
             <Video
@@ -166,7 +188,7 @@ export function IncidentDetailModal({
         ) : (
           <Image source={{ uri: item }} style={styles.mediaImage} resizeMode="cover" />
         )}
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -184,7 +206,7 @@ export function IncidentDetailModal({
       <View style={styles.timelineItem}>
         <View style={styles.timelineDotContainer}>
           <View style={[styles.timelineDot, { backgroundColor: statusColor }]} />
-          {!isLast && <View style={[styles.timelineLine, { borderLeftColor: statusColor }]} />}
+          {!isLast && <View style={[styles.timelineLine, { backgroundColor: statusColor }]} />}
         </View>
         <View style={styles.timelineContent}>
           <View style={styles.timelineEventBox}>
@@ -211,12 +233,14 @@ export function IncidentDetailModal({
   ];
 
   return (
-    <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
+    <Modal visible={visible} animationType="slide" onRequestClose={onClose} statusBarTranslucent>
+      <StatusBar style="light" backgroundColor={colors.headerBg} />
       <SafeAreaView
-        style={[styles.container, { backgroundColor: isDark ? '#11182700' : '#ffffff00' }]}
-        edges={['top']}
+        style={styles.container}
+        edges={['left', 'right', 'bottom']}
       >
         <ThemedView style={{ flex: 1 }}>
+          <View style={{ height: insets.top, backgroundColor: colors.headerBg }} />
           <IncidentHeader
             backgroundColor={colors.headerBg}
             iconColor={colors.text}
@@ -401,8 +425,37 @@ export function IncidentDetailModal({
             <View style={{ height: 40 }} />
           </ScrollView>
 
+          <ImageViewing
+            images={previewUri ? [{ uri: previewUri }] : []}
+            imageIndex={0}
+            visible={previewVisible && previewType === 'image'}
+            onRequestClose={closePreview}
+          />
+
+          <Modal visible={previewVisible && previewType === 'video'} transparent animationType="fade">
+            <View style={styles.previewOverlay}>
+              <View style={styles.previewHeader}>
+                <TouchableOpacity onPress={closePreview} style={styles.previewCloseButton}>
+                  <IconSymbol name="xmark" size={22} color="#FFFFFF" />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.previewContent}>
+                <Video
+                  source={{ uri: previewUri }}
+                  rate={1.0}
+                  volume={1.0}
+                  isMuted={false}
+                  resizeMode={ResizeMode.CONTAIN}
+                  shouldPlay={previewVisible}
+                  useNativeControls
+                  style={styles.previewMedia}
+                />
+              </View>
+            </View>
+          </Modal>
+
           {/* Close Button */}
-          <View style={styles.closeButtonContainer}>
+          <View style={[styles.closeButtonContainer, { bottom: 20 }]}>
             <CheckmarkButton
               onPress={onClose}
               backgroundColor={colors.fabBg}
@@ -621,9 +674,35 @@ const styles = StyleSheet.create({
   },
   closeButtonContainer: {
     position: 'absolute',
-    bottom: 20,
     left: 0,
     right: 0,
     alignItems: 'center',
+  },
+  previewOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.95)',
+  },
+  previewHeader: {
+    paddingTop: 16,
+    paddingHorizontal: 16,
+    alignItems: 'flex-end',
+  },
+  previewCloseButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.15)',
+  },
+  previewContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
+  previewMedia: {
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT * 0.7,
   },
 });

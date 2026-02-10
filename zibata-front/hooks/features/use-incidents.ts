@@ -2,7 +2,8 @@
  * Hook personalizado para manejar la lógica de incidencias
  */
 
-import { INITIAL_INCIDENTS } from '@/constants/features/incidents';
+import type { CreateIncidentInput } from '@/hooks/features/incidents-store';
+import { useIncidentsStore } from '@/hooks/features/incidents-store';
 import type { Incident } from '@/types';
 import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
@@ -14,10 +15,11 @@ interface UseIncidentsReturn {
   handleIncidentPress: (id: string) => void;
   handleCloseDetailModal: () => void;
   handleAddIncident: () => void;
+  handleCreateIncident: (payload: CreateIncidentInput) => Incident;
 }
 
 export const useIncidents = (): UseIncidentsReturn => {
-  const [incidents] = useState<Incident[]>(INITIAL_INCIDENTS);
+  const { incidents, addIncident } = useIncidentsStore();
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null);
   const [showDetailModal, setShowDetailModal] = useState<boolean>(false);
   const router = useRouter();
@@ -39,6 +41,10 @@ export const useIncidents = (): UseIncidentsReturn => {
     router.navigate('/modal/crear-incidencia');
   }, [router]);
 
+  const handleCreateIncident = useCallback((payload: CreateIncidentInput): Incident => {
+    return addIncident(payload);
+  }, [addIncident]);
+
   return {
     incidents,
     selectedIncident,
@@ -46,5 +52,6 @@ export const useIncidents = (): UseIncidentsReturn => {
     handleIncidentPress,
     handleCloseDetailModal,
     handleAddIncident,
+    handleCreateIncident,
   };
 };
