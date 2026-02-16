@@ -94,14 +94,14 @@ export default function TabLayout() {
       />
       
       <Tabs.Screen
-        name="incidencias"
+        name="control-acceso"
         options={{
-          title: 'Incidencias',
+          title: 'Acceso',
           tabBarIcon: ({ color, focused }) => (
             <View style={[styles.iconContainer, focused && styles.iconContainerFocused]}>
               <IconSymbol
                 size={26}
-                name="exclamationmark.triangle.fill"
+                name="key.fill"
                 color={color}
               />
             </View>
