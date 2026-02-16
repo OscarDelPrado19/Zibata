@@ -36,6 +36,13 @@ export interface Incident {
   reporter?: string;
 }
 
+export interface AccessCredential {
+  id: string;
+  name: string;
+  date: string;
+  statusColor: string;
+}
+
 export type ColorScheme = 'light' | 'dark';
 
 export interface ThemedColors {
