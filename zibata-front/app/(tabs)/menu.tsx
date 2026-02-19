@@ -1,23 +1,123 @@
-import { StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  Image,
+  ScrollView,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { ThemedView } from '@/components/themed-view';
+const { width, height } = Dimensions.get("window");
 
 export default function MenuScreen() {
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
-      <ThemedView style={styles.content}>
-        {/* Menu content will go here */}
-      </ThemedView>
+    <SafeAreaView style={styles.container} edges={["top"]}>
+      <View style={styles.drawer}>
+        <ScrollView contentContainerStyle={styles.menuContent}>
+          <MenuItem icon="person-outline" label="PERFIL" type="ion" />
+          <MenuItem icon="car-outline" label="VEHÍCULOS" type="ion" />
+          <MenuItem
+            icon="file-document-outline"
+            label="AVISO PRIVACIDAD"
+            type="material"
+          />
+          <MenuItem
+            icon="file-document-multiple-outline"
+            label="TÉRMINOS Y CONDICIONES"
+            type="material"
+          />
+          <MenuItem
+            icon="clipboard-text-outline"
+            label="TRÁMITES"
+            type="material"
+          />
+          <MenuItem icon="bookmark-outline" label="CONÓCENOS" type="material" />
+          <MenuItem
+            icon="information-outline"
+            label="ACERCA DE"
+            type="material"
+          />
+          <MenuItem icon="log-out-outline" label="SALIR" type="ion" />
+
+          {/* LOGO */}
+          <View style={styles.logoContainer}>
+            <Image
+              source={require("@/assets/images/urbanwhite.png")}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+            <Text style={styles.footerText}>TODOS LOS DERECHOS RESERVADOS</Text>
+          </View>
+        </ScrollView>
+      </View>
     </SafeAreaView>
+  );
+}
+
+function MenuItem({ icon, label, type }) {
+  return (
+    <TouchableOpacity style={styles.menuItem}>
+      {type === "ion" ? (
+        <Ionicons name={icon} size={24} color="white" />
+      ) : (
+        <MaterialCommunityIcons name={icon} size={24} color="white" />
+      )}
+      <Text style={styles.menuText}>{label}</Text>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "black",
   },
-  content: {
+
+  drawer: {
     flex: 1,
+    backgroundColor: "black",
+  },
+
+  menuContent: {
+    paddingTop: 30,
+    paddingHorizontal: 25,
+  },
+
+  menuItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 28,
+  },
+
+  menuText: {
+    color: "white",
+    fontSize: 16,
+    marginLeft: 20,
+    letterSpacing: 1,
+  },
+
+  logoContainer: {
+    marginTop: 80,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  logo: {
+    width: 300,
+    height: 200,
+    borderRadius: 10,
+  },
+
+  footerText: {
+    color: "white",
+    textAlign: "center",
+    marginTop: 30,
+    marginBottom: 20,
+    fontSize: 12,
+    letterSpacing: 1,
   },
 });
