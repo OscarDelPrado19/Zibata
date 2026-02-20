@@ -2,7 +2,7 @@
  * Constantes y configuracion para la pantalla de control de acceso
  */
 
-import type { AccessCredential } from '@/types';
+import type { AccessCredential, Employee, Provider } from '@/types';
 
 export const AccessControlColors = {
   light: {
@@ -34,6 +34,40 @@ export const AccessControlColors = {
     iconDark: '#111111',
   },
 } as const;
+
+export const EMPLOYEES: Employee[] = [
+  {
+    id: '1',
+    name: 'JUAN PÉREZ LÓPEZ',
+    date: '15-01-2025',
+    statusColor: '#10B981',
+    position: 'Seguridad',
+  },
+  {
+    id: '2',
+    name: 'MARÍA GARCÍA HERNÁNDEZ',
+    date: '10-12-2024',
+    statusColor: '#10B981',
+    position: 'Mantenimiento',
+  },
+];
+
+export const PROVIDERS: Provider[] = [
+  {
+    id: '1',
+    name: 'CARLOS MARTÍNEZ SÁNCHEZ',
+    date: '20-01-2025',
+    statusColor: '#3B82F6',
+    company: 'Plomería Express',
+  },
+  {
+    id: '2',
+    name: 'ANA LÓPEZ RODRÍGUEZ',
+    date: '18-01-2025',
+    statusColor: '#3B82F6',
+    company: 'Jardinería Pro',
+  },
+];
 
 export const ACCESS_CREDENTIALS: AccessCredential[] = [
   {
