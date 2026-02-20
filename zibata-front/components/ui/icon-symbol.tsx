@@ -31,6 +31,7 @@ const MAPPING = {
   'play.fill': 'play-arrow',
   'xmark': 'close',
   'calendar': 'calendar-today',
+  'clock': 'access-time',
   'key.fill': 'vpn-key',
   'figure.walk': 'directions-walk',
   'person.text.rectangle': 'badge',
