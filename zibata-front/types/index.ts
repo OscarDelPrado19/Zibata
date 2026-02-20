@@ -43,6 +43,22 @@ export interface AccessCredential {
   statusColor: string;
 }
 
+export interface Employee {
+  id: string;
+  name: string;
+  date: string;
+  statusColor: string;
+  position?: string;
+}
+
+export interface Provider {
+  id: string;
+  name: string;
+  date: string;
+  statusColor: string;
+  company?: string;
+}
+
 export type ColorScheme = 'light' | 'dark';
 
 export interface ThemedColors {
