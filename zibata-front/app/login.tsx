@@ -1,16 +1,24 @@
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { useState } from "react";
 import {
-  View,
+  Alert,
+  Image,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  Image,
-  SafeAreaView,
-  Platform,
+  View,
 } from "react-native";
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
+
+// Usuarios simulados con roles
+const USUARIOS = [
+  { usuario: "guardia1", password: "guardia123", rol: "guardia" },
+  { usuario: "admin1", password: "admin123", rol: "admin" },
+  { usuario: "residente1", password: "residente123", rol: "residente" },
+];
 
 export default function Login() {
   const router = useRouter();
@@ -19,10 +27,25 @@ export default function Login() {
   const [secure, setSecure] = useState(true);
 
   const handleLogin = () => {
-    if (usuario && password) {
-      router.replace("/(tabs)");
+    if (!usuario || !password) {
+      Alert.alert("Error", "Ingresa usuario y contraseña");
+      return;
+    }
+
+    const user = USUARIOS.find(
+      (u) => u.usuario === usuario && u.password === password,
+    );
+
+    if (!user) {
+      Alert.alert("Error", "Usuario o contraseña incorrectos");
+      return;
+    }
+
+    // Redirigir según el rol
+    if (user.rol === "guardia") {
+      router.replace("/(guardia)");
     } else {
-      alert("Ingresa usuario y contraseña");
+      router.replace("/(tabs)");
     }
   };
 
@@ -47,6 +70,7 @@ export default function Login() {
               style={styles.input}
               value={usuario}
               onChangeText={setUsuario}
+              autoCapitalize="none"
             />
           </View>
 
@@ -97,7 +121,7 @@ export default function Login() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#c6c3c3", // gris claro igual al mock
+    backgroundColor: "#c6c3c3",
   },
   container: {
     flex: 1,
@@ -109,16 +133,6 @@ const styles = StyleSheet.create({
     width: 350,
     height: 320,
     marginTop: 20,
-  },
-  subtitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginTop: 10,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 25,
   },
   card: {
     width: "100%",
