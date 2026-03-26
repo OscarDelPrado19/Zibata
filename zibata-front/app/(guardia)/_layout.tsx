@@ -12,119 +12,71 @@ export default function GuardiaLayout() {
       screenOptions={{
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarActiveTintColor: "#1a4a6b",
-        tabBarInactiveTintColor: "#999",
+        tabBarActiveTintColor: "#1E4D6B",
+        tabBarInactiveTintColor: "#1E4D6B",
+        tabBarShowLabel: false,
         tabBarStyle: {
           elevation: 0,
-          backgroundColor: "#ffffff",
+          backgroundColor: "#FFFFFF",
           borderTopWidth: 1,
-          borderTopColor: "#e0e0e0",
+          borderTopColor: "#E5E7EB",
           height: 60 + insets.bottom,
-          paddingBottom: insets.bottom + 4,
-          paddingTop: 6,
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.08,
-          shadowRadius: 3,
-        },
-        tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: "600",
-          marginTop: 2,
-          letterSpacing: 0.3,
-        },
-        tabBarItemStyle: {
-          paddingVertical: 4,
-          paddingHorizontal: 8,
+          paddingBottom: insets.bottom,
         },
       }}
     >
-      {/* Pantalla principal del guardia */}
+      {/* 1. Casa */}
       <Tabs.Screen
         name="index"
         options={{
-          title: "Inicio",
-          tabBarIcon: ({ color, focused }) => (
-            <View style={[styles.iconContainer, focused && styles.iconFocused]}>
-              <IconSymbol size={24} name="house.fill" color={color} />
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.icon, focused && styles.iconFocused]}>
+              <IconSymbol size={26} name="house.fill" color="#1E4D6B" />
             </View>
           ),
         }}
       />
 
-      {/* Control de acceso */}
+      {/* 2. Persona */}
       <Tabs.Screen
         name="control-acceso"
         options={{
-          title: "Acceso",
-          tabBarIcon: ({ color, focused }) => (
-            <View style={[styles.iconContainer, focused && styles.iconFocused]}>
-              <IconSymbol size={24} name="key.fill" color={color} />
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.icon, focused && styles.iconFocused]}>
+              <IconSymbol size={26} name="person.fill" color="#1E4D6B" />
             </View>
           ),
         }}
       />
 
-      {/* Registro de visitas */}
-      <Tabs.Screen
-        name="registro-visita"
-        options={{
-          title: "Visitas",
-          tabBarIcon: ({ color, focused }) => (
-            <View style={[styles.iconContainer, focused && styles.iconFocused]}>
-              <IconSymbol
-                size={24}
-                name="person.badge.plus.fill"
-                color={color}
-              />
-            </View>
-          ),
-        }}
-      />
-
-      {/* Incidencias */}
-      <Tabs.Screen
-        name="incidencias"
-        options={{
-          title: "Incidencias",
-          tabBarIcon: ({ color, focused }) => (
-            <View style={[styles.iconContainer, focused && styles.iconFocused]}>
-              <IconSymbol
-                size={24}
-                name="exclamationmark.triangle.fill"
-                color={color}
-              />
-            </View>
-          ),
-        }}
-      />
-
-      {/* Menú / Perfil */}
+      {/* 3. Menú hamburguesa */}
       <Tabs.Screen
         name="menu"
         options={{
-          title: "Menú",
-          tabBarIcon: ({ color, focused }) => (
-            <View style={[styles.iconContainer, focused && styles.iconFocused]}>
-              <IconSymbol size={24} name="line.3.horizontal" color={color} />
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.icon, focused && styles.iconFocused]}>
+              <IconSymbol size={26} name="line.3.horizontal" color="#1E4D6B" />
             </View>
           ),
         }}
       />
+
+      {/* Ocultar las demás pantallas del navbar */}
+      <Tabs.Screen name="registro-visita" options={{ href: null }} />
+      <Tabs.Screen name="incidencias" options={{ href: null }} />
     </Tabs>
   );
 }
 
 const styles = StyleSheet.create({
-  iconContainer: {
-    justifyContent: "center",
+  icon: {
     alignItems: "center",
-    width: 38,
-    height: 38,
+    justifyContent: "center",
+    width: 44,
+    height: 44,
     borderRadius: 10,
-    backgroundColor: "transparent",
   },
   iconFocused: {
-    backgroundColor: "rgba(26, 74, 107, 0.1)",
+    backgroundColor: "rgba(30, 77, 107, 0.08)",
   },
 });

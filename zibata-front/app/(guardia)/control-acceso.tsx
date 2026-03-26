@@ -1,7 +1,9 @@
+import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,174 +11,258 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
-export default function ControlAcceso() {
-  const [busqueda, setBusqueda] = useState("");
-  const [filtro, setFiltro] = useState("ROL");
+const H = "#1E4D6B";
 
-  const filtros = ["ROL", "VISITANTE", "RESIDENTE", "INMUEBLE"];
+export default function ControlAcceso(): React.ReactElement {
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const [activeTab, setActiveTab] = useState<"person" | "package">("person");
+  const [donde, setDonde] = useState("");
+  const [placas, setPlacas] = useState("");
+  const [nombre, setNombre] = useState("");
+
+  const handleRegistrar = () => {
+    if (!donde.trim() || !nombre.trim()) return;
+    router.back();
+  };
 
   return (
-    <SafeAreaView style={styles.safe}>
-      {/* HEADER */}
+    <SafeAreaView style={styles.safe} edges={["top", "left", "right"]}>
+      <StatusBar style="light" backgroundColor={H} />
+
+      {/* ── HEADER ── */}
       <View style={styles.header}>
-        <View style={styles.headerIcon}>
-          <Ionicons name="shield-checkmark" size={32} color="#fff" />
+        <View style={styles.avatarCircle}>
+          <Ionicons name="shield" size={34} color={H} />
         </View>
         <Text style={styles.headerTitle}>CASETA DE VIGILANCIA</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.pageTitle}>CONTROL DE ACCESO</Text>
+      {/* ── TABS ── */}
+      <View style={styles.tabsBg}>
+        <TouchableOpacity
+          onPress={() => setActiveTab("person")}
+          activeOpacity={0.8}
+          style={[styles.tab, activeTab === "person" && styles.tabActive]}
+        >
+          <IconSymbol
+            size={26}
+            name="figure.walk"
+            color={activeTab === "person" ? H : "#FFFFFF"}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setActiveTab("package")}
+          activeOpacity={0.8}
+          style={[styles.tab, activeTab === "package" && styles.tabActive]}
+        >
+          <Ionicons
+            name="cube"
+            size={26}
+            color={activeTab === "package" ? H : "#FFFFFF"}
+          />
+        </TouchableOpacity>
+      </View>
 
-        {/* BUSCADOR */}
-        <View style={styles.searchRow}>
-          <View style={styles.searchBox}>
-            <Ionicons name="search" size={18} color="#999" />
-            <TextInput
-              placeholder="BUSCAR"
-              placeholderTextColor="#999"
-              style={styles.searchInput}
-              value={busqueda}
-              onChangeText={setBusqueda}
-            />
-          </View>
-          <TouchableOpacity style={styles.qrBtn}>
-            <Ionicons name="qr-code" size={24} color="#1a4a6b" />
+      {/* ── BODY BLANCO ── */}
+      <ScrollView
+        style={styles.body}
+        contentContainerStyle={[
+          styles.scroll,
+          { paddingBottom: insets.bottom + 24 },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* back + título */}
+        <View style={styles.titleRow}>
+          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
+            <Ionicons name="chevron-back" size={22} color="#111111" />
+          </TouchableOpacity>
+          <Text style={styles.pageTitle}>REGISTRO DE VISITA</Text>
+        </View>
+
+        {/* campos */}
+        <TextInput
+          style={styles.field}
+          placeholder="*DONDE"
+          placeholderTextColor="#9CA3AF"
+          value={donde}
+          onChangeText={setDonde}
+          autoCapitalize="characters"
+        />
+        <TextInput
+          style={styles.field}
+          placeholder="PLACAS"
+          placeholderTextColor="#9CA3AF"
+          value={placas}
+          onChangeText={setPlacas}
+          autoCapitalize="characters"
+        />
+        <TextInput
+          style={styles.field}
+          placeholder="NOMBRE DEL VISITANTE"
+          placeholderTextColor="#9CA3AF"
+          value={nombre}
+          onChangeText={setNombre}
+          autoCapitalize="words"
+        />
+
+        {/* fotografías */}
+        <Text style={styles.fotoLabel}>FOTOGRAFIAS DEL ACCESO</Text>
+        <View style={styles.fotoRow}>
+          <TouchableOpacity style={styles.fotoCircle} activeOpacity={0.85}>
+            <Ionicons name="card" size={32} color="#FFFFFF" />{" "}
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.fotoCircle} activeOpacity={0.85}>
+            <IconSymbol size={32} name="car.fill" color="#FFFFFF" />
           </TouchableOpacity>
         </View>
 
-        {/* FILTROS */}
-        <View style={styles.filtros}>
-          {filtros.map((f) => (
-            <TouchableOpacity
-              key={f}
-              style={[styles.filtroBtn, filtro === f && styles.filtroBtnActive]}
-              onPress={() => setFiltro(f)}
-            >
-              <Text
-                style={[
-                  styles.filtroText,
-                  filtro === f && styles.filtroTextActive,
-                ]}
-              >
-                {f}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        {/* separador */}
+        <View style={styles.separator} />
 
-        {/* ESTADO VACÍO */}
-        <View style={styles.emptyState}>
-          <Ionicons name="shield-checkmark" size={64} color="#1a4a6b" />
-          <Text style={styles.emptyText}>Busca un residente o visitante</Text>
+        {/* botón registrar */}
+        <View style={styles.btnWrapper}>
+          <TouchableOpacity
+            style={styles.registerBtn}
+            onPress={handleRegistrar}
+            activeOpacity={0.9}
+          >
+            <Text style={styles.registerText}>REGISTRAR</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
-
-      {/* FAB */}
-      <TouchableOpacity style={styles.fab}>
-        <Ionicons name="add" size={28} color="#fff" />
-      </TouchableOpacity>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f5f5f5" },
+  safe: {
+    flex: 1,
+    backgroundColor: H,
+  },
   header: {
-    backgroundColor: "#1a4a6b",
+    backgroundColor: H,
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    gap: 12,
+    paddingHorizontal: 18,
+    paddingTop: 10,
+    paddingBottom: 12,
+    gap: 16,
   },
-  headerIcon: {
-    backgroundColor: "rgba(255,255,255,0.15)",
-    borderRadius: 50,
-    padding: 8,
+  avatarCircle: {
+    width: 62,
+    height: 62,
+    borderRadius: 31,
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+    justifyContent: "center",
   },
   headerTitle: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-    letterSpacing: 1,
+    color: "#FFFFFF",
+    fontSize: 17,
+    fontWeight: "900",
+    letterSpacing: 0.4,
   },
-  container: { padding: 20, paddingBottom: 100 },
-  pageTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#1a4a6b",
-    marginBottom: 16,
-    letterSpacing: 1,
-  },
-  searchRow: {
+  tabsBg: {
+    backgroundColor: H,
     flexDirection: "row",
-    gap: 10,
-    marginBottom: 14,
-    alignItems: "center",
-  },
-  searchBox: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    gap: 8,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  searchInput: { flex: 1, color: "#333", fontSize: 14 },
-  qrBtn: {
-    backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  filtros: {
-    flexDirection: "row",
-    backgroundColor: "#1a4a6b",
-    borderRadius: 10,
-    padding: 4,
-    marginBottom: 20,
-    gap: 2,
-  },
-  filtroBtn: {
-    flex: 1,
-    paddingVertical: 8,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  filtroBtnActive: { backgroundColor: "#fff" },
-  filtroText: { color: "#fff", fontSize: 11, fontWeight: "600" },
-  filtroTextActive: { color: "#1a4a6b" },
-  emptyState: {
-    alignItems: "center",
     justifyContent: "center",
-    marginTop: 80,
+    alignItems: "center",
+    paddingBottom: 12,
     gap: 12,
   },
-  emptyText: { color: "#999", fontSize: 14 },
-  fab: {
-    position: "absolute",
-    bottom: 90,
-    alignSelf: "center",
-    backgroundColor: "#1a4a6b",
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+  tab: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 5,
+  },
+  tabActive: {
+    backgroundColor: "#FFFFFF",
+  },
+  body: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+  },
+  scroll: {
+    paddingHorizontal: 18,
+    paddingTop: 18,
+  },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+    gap: 12,
+  },
+  backArrow: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#111111",
+    lineHeight: 22,
+  },
+  pageTitle: {
+    fontSize: 15,
+    fontWeight: "800",
+    color: "#111111",
+    letterSpacing: 0.6,
+  },
+  field: {
+    backgroundColor: "#E8E8E8",
+    borderRadius: 4,
+    paddingVertical: 16,
+    paddingHorizontal: 14,
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#111111",
+    marginBottom: 10,
+    width: "100%",
+  },
+  fotoLabel: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: "#111111",
+    marginTop: 10,
+    marginBottom: 14,
+  },
+  fotoRow: {
+    flexDirection: "row",
+    gap: 28,
+    marginBottom: 24,
+    justifyContent: "center",
+  },
+  fotoCircle: {
+    width: 76,
+    height: 76,
+    borderRadius: 38,
+    backgroundColor: H,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  separator: {
+    height: 1,
+    backgroundColor: "#E5E7EB",
+    marginBottom: 24,
+  },
+  btnWrapper: {
+    alignItems: "center",
+  },
+  registerBtn: {
+    backgroundColor: H,
+    borderRadius: 32,
+    paddingVertical: 15,
+    paddingHorizontal: 52,
+  },
+  registerText: {
+    color: "#FFFFFF",
+    fontSize: 15,
+    fontWeight: "900",
+    letterSpacing: 1.5,
   },
 });

@@ -1,70 +1,103 @@
-import { Ionicons } from "@expo/vector-icons";
+import { IconSymbol } from "@/components/ui/icon-symbol";
 import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
-export default function GuardiaHome() {
+const H = "#1E4D6B";
+const FILTROS = ["ROL", "VISITANTE", "RESIDENTE", "INMUEBLE"];
+
+export default function GuardiaHome(): React.ReactElement {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const [buscar, setBuscar] = useState("");
+  const [filtroActivo, setFiltroActivo] = useState("ROL");
 
   return (
-    <SafeAreaView style={styles.safe}>
-      {/* HEADER */}
+    <SafeAreaView style={styles.safe} edges={["top", "left", "right"]}>
+      <StatusBar style="light" backgroundColor={H} translucent={false} />
+
+      {/* ── HEADER ── */}
       <View style={styles.header}>
-        <View style={styles.headerIcon}>
-          <Ionicons name="shield-checkmark" size={32} color="#fff" />
+        <View style={styles.avatarCircle}>
+          <IconSymbol size={34} name="person.crop.circle.fill" color={H} />
         </View>
         <Text style={styles.headerTitle}>CASETA DE VIGILANCIA</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.welcome}>Bienvenido, Guardia</Text>
-        <Text style={styles.subtitle}>¿Qué deseas hacer hoy?</Text>
-
-        {/* TARJETAS DE ACCESO RÁPIDO */}
-        <View style={styles.grid}>
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() => router.push("/(guardia)/control-acceso")}
-          >
-            <Ionicons name="key" size={32} color="#1a4a6b" />
-            <Text style={styles.cardTitle}>Control de Acceso</Text>
-            <Text style={styles.cardSub}>Verificar residentes</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() => router.push("/(guardia)/registro-visita")}
-          >
-            <Ionicons name="person-add" size={32} color="#1a4a6b" />
-            <Text style={styles.cardTitle}>Registrar Visita</Text>
-            <Text style={styles.cardSub}>Nuevo ingreso</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() => router.push("/(guardia)/incidencias")}
-          >
-            <Ionicons name="warning" size={32} color="#c0392b" />
-            <Text style={styles.cardTitle}>Incidencias</Text>
-            <Text style={styles.cardSub}>Reportar evento</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() => router.push("/(guardia)/menu")}
-          >
-            <Ionicons name="menu" size={32} color="#1a4a6b" />
-            <Text style={styles.cardTitle}>Menú</Text>
-            <Text style={styles.cardSub}>Más opciones</Text>
+      {/* ── BODY ── */}
+      <View style={styles.body}>
+        {/* BUSCADOR + QR */}
+        <View style={styles.searchRow}>
+          <View style={styles.searchBox}>
+            <IconSymbol size={18} name="magnifyingglass" color="#9CA3AF" />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="BUSCAR"
+              placeholderTextColor="#9CA3AF"
+              value={buscar}
+              onChangeText={setBuscar}
+            />
+          </View>
+          <TouchableOpacity activeOpacity={0.8}>
+            <IconSymbol size={30} name="qrcode" color={H} />
           </TouchableOpacity>
         </View>
-      </ScrollView>
+
+        {/* FILTROS — barra azul oscuro */}
+        <View style={styles.filtrosBar}>
+          {FILTROS.map((f) => (
+            <TouchableOpacity
+              key={f}
+              onPress={() => setFiltroActivo(f)}
+              activeOpacity={0.8}
+              style={styles.filtroBtn}
+            >
+              <Text
+                style={[
+                  styles.filtroText,
+                  filtroActivo === f && styles.filtroTextActive,
+                ]}
+              >
+                {f}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {/* EMPTY STATE — ícono gorra centrado */}
+        <ScrollView
+          contentContainerStyle={[
+            styles.scroll,
+            { paddingBottom: insets.bottom + 80 },
+          ]}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.emptyState}>
+            <IconSymbol size={80} name="person.crop.circle.fill" color={H} />
+          </View>
+        </ScrollView>
+      </View>
+
+      {/* FAB + gris claro como en la foto */}
+      <TouchableOpacity
+        style={[styles.fab, { bottom: insets.bottom + 68 }]}
+        activeOpacity={0.85}
+        onPress={() => router.push("/(guardia)/registro-visita")}
+      >
+        <Text style={styles.fabText}>+</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -72,68 +105,108 @@ export default function GuardiaHome() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: H,
   },
   header: {
-    backgroundColor: "#1a4a6b",
+    backgroundColor: H,
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    gap: 12,
+    paddingHorizontal: 18,
+    paddingTop: 10,
+    paddingBottom: 12,
+    gap: 16,
   },
-  headerIcon: {
-    backgroundColor: "rgba(255,255,255,0.15)",
-    borderRadius: 50,
-    padding: 8,
+  avatarCircle: {
+    width: 62,
+    height: 62,
+    borderRadius: 31,
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+    justifyContent: "center",
   },
   headerTitle: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-    letterSpacing: 1,
+    color: "#FFFFFF",
+    fontSize: 17,
+    fontWeight: "900",
+    letterSpacing: 0.4,
   },
-  container: {
-    padding: 20,
+  body: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
   },
-  welcome: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#1a4a6b",
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 24,
-  },
-  grid: {
+  searchRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 16,
-    justifyContent: "space-between",
-  },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 14,
-    padding: 20,
-    width: "47%",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
+    paddingHorizontal: 14,
+    paddingTop: 14,
+    paddingBottom: 8,
+    gap: 12,
+  },
+  searchBox: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F0F0F0",
+    borderRadius: 24,
+    paddingHorizontal: 14,
+    paddingVertical: 11,
     gap: 8,
   },
-  cardTitle: {
+  searchInput: {
+    flex: 1,
     fontSize: 13,
-    fontWeight: "bold",
-    color: "#222",
-    textAlign: "center",
+    fontWeight: "600",
+    color: "#111111",
   },
-  cardSub: {
+  filtrosBar: {
+    backgroundColor: H,
+    flexDirection: "row",
+    marginHorizontal: 14,
+    borderRadius: 6,
+    marginBottom: 8,
+  },
+  filtroBtn: {
+    flex: 1,
+    paddingVertical: 11,
+    alignItems: "center",
+  },
+  filtroText: {
+    color: "#FFFFFF",
     fontSize: 11,
-    color: "#888",
-    textAlign: "center",
+    fontWeight: "700",
+    letterSpacing: 0.3,
+    opacity: 0.75,
+  },
+  filtroTextActive: {
+    opacity: 1,
+    textDecorationLine: "underline",
+  },
+  scroll: {
+    flexGrow: 1,
+  },
+  emptyState: {
+    flex: 1,
+    alignItems: "center",
+    paddingTop: 100,
+  },
+  fab: {
+    position: "absolute",
+    alignSelf: "center",
+    width: 58,
+    height: 58,
+    borderRadius: 29,
+    backgroundColor: "#E2E2E2",
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  fabText: {
+    fontSize: 34,
+    fontWeight: "200",
+    color: "#444",
+    lineHeight: 38,
   },
 });
