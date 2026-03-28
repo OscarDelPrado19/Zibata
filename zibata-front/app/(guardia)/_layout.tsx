@@ -15,17 +15,11 @@ export default function GuardiaLayout() {
         tabBarActiveTintColor: "#133a67",
         tabBarInactiveTintColor: "#133a67",
         tabBarShowLabel: false,
-        tabBarStyle: {
-          elevation: 0,
-          backgroundColor: "#FFFFFF",
-          borderTopWidth: 1,
-          borderTopColor: "#E5E7EB",
-          height: 60 + insets.bottom,
-          paddingBottom: insets.bottom,
-        },
+        tabBarStyle: [styles.tabBar, { bottom: Math.max(insets.bottom, 24) }],
+        tabBarItemStyle: styles.tabBarItem,
+        tabBarBackground: () => <View style={styles.tabBarBackground} />,
       }}
     >
-      {/* 1. Casa */}
       <Tabs.Screen
         name="index"
         options={{
@@ -37,7 +31,6 @@ export default function GuardiaLayout() {
         }}
       />
 
-      {/* 2. Persona */}
       <Tabs.Screen
         name="control-acceso"
         options={{
@@ -49,7 +42,6 @@ export default function GuardiaLayout() {
         }}
       />
 
-      {/* 3. Menú hamburguesa */}
       <Tabs.Screen
         name="menu"
         options={{
@@ -61,7 +53,6 @@ export default function GuardiaLayout() {
         }}
       />
 
-      {/* Ocultar las demás pantallas del navbar */}
       <Tabs.Screen name="registro-visita" options={{ href: null }} />
       <Tabs.Screen name="incidencias" options={{ href: null }} />
     </Tabs>
@@ -69,14 +60,54 @@ export default function GuardiaLayout() {
 }
 
 const styles = StyleSheet.create({
+  tabBar: {
+    position: "absolute",
+    left: 40,
+    right: 40,
+    bottom: 24,
+    height: 68,
+    borderRadius: 20,
+    borderTopWidth: 0,
+    backgroundColor: "transparent",
+    elevation: 0,
+    shadowOpacity: 0,
+    marginLeft: 40,
+    marginRight: 40,
+  },
+  tabBarBackground: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 20,
+    backgroundColor: "#FFFFFF",
+    overflow: "hidden",
+    elevation: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+  },
+  tabBarItem: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    height: 68,
+    paddingVertical: 0,
+    marginVertical: 0,
+  },
   icon: {
     alignItems: "center",
     justifyContent: "center",
-    width: 44,
-    height: 44,
-    borderRadius: 10,
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    marginTop: 25,
   },
   iconFocused: {
-    backgroundColor: "rgba(30, 77, 107, 0.08)",
+    backgroundColor: "rgba(19, 58, 103, 0.10)",
+    borderRadius: 14,
+    overflow: "hidden",
   },
 });

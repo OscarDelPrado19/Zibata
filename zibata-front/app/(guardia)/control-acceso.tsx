@@ -43,7 +43,7 @@ export default function ControlAcceso(): React.ReactElement {
           <Ionicons name="shield-checkmark" size={34} color={H} />
         </View>
         <Text style={styles.headerTitle}>CASETA DE VIGILANCIA</Text>
-        <View style={{ width: 62 }} />{" "}
+        <View style={{ width: 62 }} />
         {/* spacer mismo ancho que avatarCircle */}
       </View>
 
