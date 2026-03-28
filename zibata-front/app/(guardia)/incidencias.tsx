@@ -1,4 +1,5 @@
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
@@ -17,7 +18,7 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
-const H = "#1E4D6B";
+const H = "#133a67";
 
 type Incidencia = {
   id: string;
@@ -79,13 +80,14 @@ export default function IncidenciasGuardia(): React.ReactElement {
   };
 
   return (
-    <SafeAreaView style={styles.safe} edges={["top", "left", "right"]}>
+    <SafeAreaView style={styles.safe} edges={["top"]}>
       <StatusBar style="light" backgroundColor={H} />
 
       {/* HEADER */}
+
       <View style={styles.header}>
         <View style={styles.avatarCircle}>
-          <IconSymbol size={30} name="person.crop.circle.fill" color={H} />
+          <Ionicons name="shield-checkmark" size={34} color={H} />
         </View>
         <Text style={styles.headerTitle}>CASETA DE VIGILANCIA</Text>
       </View>
@@ -230,14 +232,13 @@ export default function IncidenciasGuardia(): React.ReactElement {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: H,
   },
   header: {
     backgroundColor: H,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 18,
-    paddingTop: 10,
+    paddingTop: 17,
     paddingBottom: 12,
     gap: 16,
   },
@@ -250,10 +251,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   headerTitle: {
+    flex: 1,
     color: "#FFFFFF",
     fontSize: 17,
     fontWeight: "900",
     letterSpacing: 0.4,
+    textAlign: "center", // CAMBIO 1
   },
   body: {
     flex: 1,

@@ -1,12 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+const H = "#133a67";
 
 export default function GuardiaMenu() {
   const router = useRouter();
@@ -16,11 +14,13 @@ export default function GuardiaMenu() {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={styles.safe} edges={["top"]}>
+      <StatusBar style="light" backgroundColor={H} />
+
       {/* HEADER */}
       <View style={styles.header}>
-        <View style={styles.headerIcon}>
-          <Ionicons name="shield-checkmark" size={32} color="#fff" />
+        <View style={styles.avatarCircle}>
+          <Ionicons name="shield-checkmark" size={34} color={H} />
         </View>
         <Text style={styles.headerTitle}>CASETA DE VIGILANCIA</Text>
       </View>
@@ -30,25 +30,19 @@ export default function GuardiaMenu() {
 
         <View style={styles.menuList}>
           <TouchableOpacity style={styles.menuItem}>
-            <Ionicons name="person-circle-outline" size={22} color="#1a4a6b" />
+            <Ionicons name="person-circle-outline" size={22} color={H} />
             <Text style={styles.menuText}>Mi Perfil</Text>
             <Ionicons name="chevron-forward" size={18} color="#ccc" />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.menuItem}>
-            <Ionicons name="notifications-outline" size={22} color="#1a4a6b" />
+            <Ionicons name="notifications-outline" size={22} color={H} />
             <Text style={styles.menuText}>Notificaciones</Text>
             <Ionicons name="chevron-forward" size={18} color="#ccc" />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.menuItem}>
-            <Ionicons name="document-text-outline" size={22} color="#1a4a6b" />
-            <Text style={styles.menuText}>Historial de Accesos</Text>
-            <Ionicons name="chevron-forward" size={18} color="#ccc" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuItem}>
-            <Ionicons name="settings-outline" size={22} color="#1a4a6b" />
+            <Ionicons name="settings-outline" size={22} color={H} />
             <Text style={styles.menuText}>Configuración</Text>
             <Ionicons name="chevron-forward" size={18} color="#ccc" />
           </TouchableOpacity>
@@ -65,14 +59,23 @@ export default function GuardiaMenu() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f5f5f5" },
+  safe: { flex: 1, backgroundColor: "#FFFFFF" },
   header: {
-    backgroundColor: "#1a4a6b",
+    backgroundColor: H,
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    gap: 12,
+    paddingHorizontal: 18,
+    paddingTop: 17,
+    paddingBottom: 12,
+    gap: 16,
+  },
+  avatarCircle: {
+    width: 62,
+    height: 62,
+    borderRadius: 31,
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+    justifyContent: "center",
   },
   headerIcon: {
     backgroundColor: "rgba(255,255,255,0.15)",
@@ -80,16 +83,16 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   headerTitle: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-    letterSpacing: 1,
+    color: "#FFFFFF",
+    fontSize: 17,
+    fontWeight: "900",
+    letterSpacing: 0.4,
   },
-  container: { flex: 1, padding: 20 },
+  container: { flex: 1, padding: 20, backgroundColor: "#f5f5f5" },
   pageTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#1a4a6b",
+    color: H,
     marginBottom: 20,
     letterSpacing: 1,
   },

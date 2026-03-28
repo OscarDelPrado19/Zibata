@@ -38,11 +38,23 @@
           "backgroundColor": "#ffffff"
         }
       ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Esta app necesita acceso a tu cámara para escanear códigos QR."
+        }
+      ],
       "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "4a45ab8f-621e-400f-a07e-9464bb510524"
+      }
     }
   }
 }

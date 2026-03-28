@@ -12,8 +12,8 @@ export default function GuardiaLayout() {
       screenOptions={{
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarActiveTintColor: "#1E4D6B",
-        tabBarInactiveTintColor: "#1E4D6B",
+        tabBarActiveTintColor: "#133a67",
+        tabBarInactiveTintColor: "#133a67",
         tabBarShowLabel: false,
         tabBarStyle: {
           elevation: 0,
@@ -31,7 +31,7 @@ export default function GuardiaLayout() {
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={[styles.icon, focused && styles.iconFocused]}>
-              <IconSymbol size={26} name="house.fill" color="#1E4D6B" />
+              <IconSymbol size={26} name="house.fill" color="#133a67" />
             </View>
           ),
         }}
@@ -43,7 +43,7 @@ export default function GuardiaLayout() {
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={[styles.icon, focused && styles.iconFocused]}>
-              <IconSymbol size={26} name="person.fill" color="#1E4D6B" />
+              <IconSymbol size={26} name="person.fill" color="#133a67" />
             </View>
           ),
         }}
@@ -55,7 +55,7 @@ export default function GuardiaLayout() {
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={[styles.icon, focused && styles.iconFocused]}>
-              <IconSymbol size={26} name="line.3.horizontal" color="#1E4D6B" />
+              <IconSymbol size={26} name="line.3.horizontal" color="#133a67" />
             </View>
           ),
         }}
