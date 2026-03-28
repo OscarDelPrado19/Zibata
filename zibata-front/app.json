@@ -24,11 +24,18 @@
         "barStyle": "light-content",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.zibatafront"
+      "package": "com.anonymous.zibatafront",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "output": "static",
       "favicon": "./assets/images/favicon.png"
+    },
+    "splash": {
+      "backgroundColor": "#ffffff"
     },
     "plugins": [
       "expo-router",
@@ -44,7 +51,8 @@
           "cameraPermission": "Esta app necesita acceso a tu cámara para escanear códigos QR."
         }
       ],
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      "expo-video"
     ],
     "experiments": {
       "typedRoutes": true,
@@ -53,8 +61,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "4a45ab8f-621e-400f-a07e-9464bb510524"
+        "projectId": "26b688f6-1446-49ef-8bc9-ffe2d565f5c7"
       }
-    }
+    },
+    "owner": "alfredanderz"
   }
 }
