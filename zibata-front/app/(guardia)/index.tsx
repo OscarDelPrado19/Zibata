@@ -1,8 +1,10 @@
-import { IconSymbol } from "@/components/ui/icon-symbol";
+import { Ionicons } from "@expo/vector-icons";
+import { CameraView, useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
+  Modal,
   ScrollView,
   StyleSheet,
   Text,
@@ -15,7 +17,7 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
-const H = "#1E4D6B";
+const H = "#133a67";
 const FILTROS = ["ROL", "VISITANTE", "RESIDENTE", "INMUEBLE"];
 
 export default function GuardiaHome(): React.ReactElement {
@@ -23,15 +25,34 @@ export default function GuardiaHome(): React.ReactElement {
   const insets = useSafeAreaInsets();
   const [buscar, setBuscar] = useState("");
   const [filtroActivo, setFiltroActivo] = useState("ROL");
+  const [scannerVisible, setScannerVisible] = useState(false);
+  const [scanned, setScanned] = useState(false);
+  const [permission, requestPermission] = useCameraPermissions();
+
+  const handleQRPress = async () => {
+    if (!permission?.granted) {
+      const { granted } = await requestPermission();
+      if (!granted) return;
+    }
+    setScanned(false);
+    setScannerVisible(true);
+  };
+
+  const handleBarCodeScanned = ({ data }: { data: string }) => {
+    if (scanned) return;
+    setScanned(true);
+    setScannerVisible(false);
+    setBuscar(data);
+  };
 
   return (
-    <SafeAreaView style={styles.safe} edges={["top", "left", "right"]}>
+    <SafeAreaView style={styles.safe} edges={["top"]}>
       <StatusBar style="light" backgroundColor={H} translucent={false} />
 
       {/* ── HEADER ── */}
       <View style={styles.header}>
         <View style={styles.avatarCircle}>
-          <IconSymbol size={34} name="person.crop.circle.fill" color={H} />
+          <Ionicons name="shield-checkmark" size={34} color={H} />
         </View>
         <Text style={styles.headerTitle}>CASETA DE VIGILANCIA</Text>
       </View>
@@ -41,7 +62,7 @@ export default function GuardiaHome(): React.ReactElement {
         {/* BUSCADOR + QR */}
         <View style={styles.searchRow}>
           <View style={styles.searchBox}>
-            <IconSymbol size={18} name="magnifyingglass" color="#9CA3AF" />
+            <Ionicons name="search" size={18} color="#9CA3AF" />
             <TextInput
               style={styles.searchInput}
               placeholder="BUSCAR"
@@ -50,12 +71,12 @@ export default function GuardiaHome(): React.ReactElement {
               onChangeText={setBuscar}
             />
           </View>
-          <TouchableOpacity activeOpacity={0.8}>
-            <IconSymbol size={30} name="qrcode" color={H} />
+          <TouchableOpacity activeOpacity={0.8} onPress={handleQRPress}>
+            <Ionicons name="qr-code" size={30} color={H} />
           </TouchableOpacity>
         </View>
 
-        {/* FILTROS — barra azul oscuro */}
+        {/* FILTROS */}
         <View style={styles.filtrosBar}>
           {FILTROS.map((f) => (
             <TouchableOpacity
@@ -76,7 +97,7 @@ export default function GuardiaHome(): React.ReactElement {
           ))}
         </View>
 
-        {/* EMPTY STATE — ícono gorra centrado */}
+        {/* EMPTY STATE */}
         <ScrollView
           contentContainerStyle={[
             styles.scroll,
@@ -85,34 +106,77 @@ export default function GuardiaHome(): React.ReactElement {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.emptyState}>
-            <IconSymbol size={80} name="person.crop.circle.fill" color={H} />
+            <Ionicons name="shield-checkmark" size={80} color={H} />
           </View>
         </ScrollView>
       </View>
 
-      {/* FAB + gris claro como en la foto */}
+      {/* FAB */}
       <TouchableOpacity
         style={[styles.fab, { bottom: insets.bottom + 68 }]}
         activeOpacity={0.85}
-        onPress={() => router.push("/(guardia)/registro-visita")}
+        onPress={() => router.push("/(guardia)/control-acceso")}
       >
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
+
+      {/* ── MODAL SCANNER QR ── */}
+      <Modal visible={scannerVisible} animationType="slide">
+        <View style={styles.scannerContainer}>
+          <CameraView
+            style={styles.camera}
+            facing="back"
+            onBarcodeScanned={handleBarCodeScanned}
+            barcodeScannerSettings={{
+              barcodeTypes: ["qr"],
+            }}
+          />
+
+          {/* overlay con marco */}
+          <View style={styles.overlay}>
+            <View style={styles.overlayTop} />
+            <View style={styles.overlayMiddle}>
+              <View style={styles.overlaySide} />
+              <View style={styles.scanFrame}>
+                {/* esquinas del marco */}
+                <View style={[styles.corner, styles.cornerTL]} />
+                <View style={[styles.corner, styles.cornerTR]} />
+                <View style={[styles.corner, styles.cornerBL]} />
+                <View style={[styles.corner, styles.cornerBR]} />
+              </View>
+              <View style={styles.overlaySide} />
+            </View>
+            <View style={styles.overlayBottom}>
+              <Text style={styles.scanText}>Apunta al código QR</Text>
+              <TouchableOpacity
+                style={styles.cancelBtn}
+                onPress={() => setScannerVisible(false)}
+              >
+                <Text style={styles.cancelText}>CANCELAR</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
 
+const FRAME = 240;
+const CORNER = 24;
+const BORDER = 4;
+
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: H,
+    backgroundColor: "#FFFFFF",
   },
   header: {
     backgroundColor: H,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 18,
-    paddingTop: 10,
+    paddingTop: 17,
     paddingBottom: 12,
     gap: 16,
   },
@@ -137,7 +201,7 @@ const styles = StyleSheet.create({
   searchRow: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 14,
+    paddingHorizontal: 24,
     paddingTop: 14,
     paddingBottom: 8,
     gap: 12,
@@ -148,7 +212,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#F0F0F0",
     borderRadius: 24,
-    paddingHorizontal: 14,
+    paddingHorizontal: 34,
     paddingVertical: 11,
     gap: 8,
   },
@@ -161,7 +225,8 @@ const styles = StyleSheet.create({
   filtrosBar: {
     backgroundColor: H,
     flexDirection: "row",
-    marginHorizontal: 14,
+    marginTop: 8,
+    marginHorizontal: 24,
     borderRadius: 6,
     marginBottom: 8,
   },
@@ -181,9 +246,7 @@ const styles = StyleSheet.create({
     opacity: 1,
     textDecorationLine: "underline",
   },
-  scroll: {
-    flexGrow: 1,
-  },
+  scroll: { flexGrow: 1 },
   emptyState: {
     flex: 1,
     alignItems: "center",
@@ -208,5 +271,91 @@ const styles = StyleSheet.create({
     fontWeight: "200",
     color: "#444",
     lineHeight: 38,
+  },
+
+  /* SCANNER */
+  scannerContainer: {
+    flex: 1,
+    backgroundColor: "#000",
+  },
+  camera: {
+    flex: 1,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    flexDirection: "column",
+  },
+  overlayTop: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+  },
+  overlayMiddle: {
+    height: FRAME,
+    flexDirection: "row",
+  },
+  overlaySide: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+  },
+  scanFrame: {
+    width: FRAME,
+    height: FRAME,
+  },
+  overlayBottom: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 20,
+  },
+  scanText: {
+    color: "#FFFFFF",
+    fontSize: 15,
+    fontWeight: "600",
+    letterSpacing: 0.5,
+  },
+  cancelBtn: {
+    backgroundColor: H,
+    paddingVertical: 12,
+    paddingHorizontal: 40,
+    borderRadius: 30,
+  },
+  cancelText: {
+    color: "#FFFFFF",
+    fontWeight: "800",
+    fontSize: 14,
+    letterSpacing: 1,
+  },
+
+  /* esquinas del marco */
+  corner: {
+    position: "absolute",
+    width: CORNER,
+    height: CORNER,
+    borderColor: "#FFFFFF",
+  },
+  cornerTL: {
+    top: 0,
+    left: 0,
+    borderTopWidth: BORDER,
+    borderLeftWidth: BORDER,
+  },
+  cornerTR: {
+    top: 0,
+    right: 0,
+    borderTopWidth: BORDER,
+    borderRightWidth: BORDER,
+  },
+  cornerBL: {
+    bottom: 0,
+    left: 0,
+    borderBottomWidth: BORDER,
+    borderLeftWidth: BORDER,
+  },
+  cornerBR: {
+    bottom: 0,
+    right: 0,
+    borderBottomWidth: BORDER,
+    borderRightWidth: BORDER,
   },
 });

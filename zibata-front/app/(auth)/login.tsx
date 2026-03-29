@@ -16,7 +16,7 @@ import {
 // Usuarios simulados con roles
 const USUARIOS = [
   { usuario: "guardia1", password: "guardia123", rol: "guardia" },
-  { usuario: "admin1", password: "admin123", rol: "admin" },
+  { usuario: "jluna", password: "12345", rol: "admin" },
   { usuario: "residente1", password: "residente123", rol: "residente" },
 ];
 
@@ -54,7 +54,7 @@ export default function Login() {
       <View style={styles.container}>
         {/* LOGO */}
         <Image
-          source={require("../assets/images/icon.png")}
+          source={require("../../assets/images/icon.png")}
           style={styles.logo}
           resizeMode="contain"
         />

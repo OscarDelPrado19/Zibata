@@ -1,3 +1,4 @@
+// CENTRAL !
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -16,7 +17,7 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
-const H = "#1E4D6B";
+const H = "#133a67";
 
 export default function ControlAcceso(): React.ReactElement {
   const router = useRouter();
@@ -32,15 +33,18 @@ export default function ControlAcceso(): React.ReactElement {
   };
 
   return (
-    <SafeAreaView style={styles.safe} edges={["top", "left", "right"]}>
-      <StatusBar style="light" backgroundColor={H} />
+    <SafeAreaView style={styles.safe} edges={["top"]}>
+      <StatusBar style="light" backgroundColor={H} translucent={false} />
 
+      {/* ── HEADER ── */}
       {/* ── HEADER ── */}
       <View style={styles.header}>
         <View style={styles.avatarCircle}>
-          <Ionicons name="shield" size={34} color={H} />
+          <Ionicons name="shield-checkmark" size={34} color={H} />
         </View>
         <Text style={styles.headerTitle}>CASETA DE VIGILANCIA</Text>
+        <View style={{ width: 62 }} />
+        {/* spacer mismo ancho que avatarCircle */}
       </View>
 
       {/* ── TABS ── */}
@@ -83,14 +87,16 @@ export default function ControlAcceso(): React.ReactElement {
           <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
             <Ionicons name="chevron-back" size={22} color="#111111" />
           </TouchableOpacity>
+          {/* CAMBIO 2: centrado y azul */}
           <Text style={styles.pageTitle}>REGISTRO DE VISITA</Text>
+          <View style={{ width: 22 }} />
         </View>
 
         {/* campos */}
         <TextInput
           style={styles.field}
           placeholder="*DONDE"
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor="#6d6d6d"
           value={donde}
           onChangeText={setDonde}
           autoCapitalize="characters"
@@ -98,7 +104,7 @@ export default function ControlAcceso(): React.ReactElement {
         <TextInput
           style={styles.field}
           placeholder="PLACAS"
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor="#6d6d6d"
           value={placas}
           onChangeText={setPlacas}
           autoCapitalize="characters"
@@ -106,7 +112,7 @@ export default function ControlAcceso(): React.ReactElement {
         <TextInput
           style={styles.field}
           placeholder="NOMBRE DEL VISITANTE"
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor="#6d6d6d"
           value={nombre}
           onChangeText={setNombre}
           autoCapitalize="words"
@@ -116,7 +122,7 @@ export default function ControlAcceso(): React.ReactElement {
         <Text style={styles.fotoLabel}>FOTOGRAFIAS DEL ACCESO</Text>
         <View style={styles.fotoRow}>
           <TouchableOpacity style={styles.fotoCircle} activeOpacity={0.85}>
-            <Ionicons name="card" size={32} color="#FFFFFF" />{" "}
+            <Ionicons name="card" size={32} color="#FFFFFF" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.fotoCircle} activeOpacity={0.85}>
             <IconSymbol size={32} name="car.fill" color="#FFFFFF" />
@@ -144,7 +150,6 @@ export default function ControlAcceso(): React.ReactElement {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: H,
   },
   header: {
     backgroundColor: H,
@@ -164,10 +169,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   headerTitle: {
+    flex: 1,
     color: "#FFFFFF",
     fontSize: 17,
     fontWeight: "900",
     letterSpacing: 0.4,
+    textAlign: "center",
   },
   tabsBg: {
     backgroundColor: H,
@@ -192,13 +199,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
   scroll: {
-    paddingHorizontal: 18,
+    paddingHorizontal: 24, // CAMBIO 3: más separado de bordes
     paddingTop: 18,
   },
   titleRow: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 20,
+    marginTop: 14,
     gap: 12,
   },
   backArrow: {
@@ -208,38 +216,40 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   pageTitle: {
+    flex: 1,
     fontSize: 15,
     fontWeight: "800",
-    color: "#111111",
+    color: H, // CAMBIO 2: azul
     letterSpacing: 0.6,
+    textAlign: "center", // CAMBIO 2: centrado
   },
   field: {
-    backgroundColor: "#E8E8E8",
-    borderRadius: 4,
+    backgroundColor: "#d5dae1",
+    borderRadius: 1,
     paddingVertical: 16,
     paddingHorizontal: 14,
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "600",
     color: "#111111",
     marginBottom: 10,
     width: "100%",
   },
   fotoLabel: {
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: "700",
-    color: "#111111",
-    marginTop: 10,
+    color: "#262626",
+    marginTop: 15,
     marginBottom: 14,
   },
   fotoRow: {
     flexDirection: "row",
-    gap: 28,
+    gap: 110, // CAMBIO 4: más separados
     marginBottom: 24,
     justifyContent: "center",
   },
   fotoCircle: {
-    width: 76,
-    height: 76,
+    width: 70,
+    height: 70,
     borderRadius: 38,
     backgroundColor: H,
     alignItems: "center",
@@ -257,12 +267,12 @@ const styles = StyleSheet.create({
     backgroundColor: H,
     borderRadius: 32,
     paddingVertical: 15,
-    paddingHorizontal: 52,
+    paddingHorizontal: 25,
   },
   registerText: {
     color: "#FFFFFF",
     fontSize: 15,
-    fontWeight: "900",
+    fontWeight: "700",
     letterSpacing: 1.5,
   },
 });

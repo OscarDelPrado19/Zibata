@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
+import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,8 +9,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+const H = "#133a67";
 
 export default function RegistroVisita() {
+  const [activeTab, setActiveTab] = useState<"person" | "package">("person");
   const [donde, setDonde] = useState("");
   const [placas, setPlacas] = useState("");
   const [nombre, setNombre] = useState("");
@@ -27,29 +31,54 @@ export default function RegistroVisita() {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={styles.safe} edges={["top"]}>
+      <StatusBar style="light" backgroundColor={H} translucent={false} />
+
       {/* HEADER */}
       <View style={styles.header}>
         <View style={styles.headerIcon}>
           <Ionicons name="shield-checkmark" size={32} color="#fff" />
         </View>
+        {/* título centrado */}
         <Text style={styles.headerTitle}>CASETA DE VIGILANCIA</Text>
+        {/* spacer para centrar el texto */}
+        <View style={styles.headerSpacer} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.container}>
-        {/* TABS */}
+      {/* TABS */}
+      <View style={styles.tabsContainer}>
         <View style={styles.tabs}>
-          <TouchableOpacity style={[styles.tab, styles.tabActive]}>
-            <Ionicons name="walk" size={20} color="#1a4a6b" />
+          <TouchableOpacity
+            style={[styles.tab, activeTab === "person" && styles.tabActive]}
+            onPress={() => setActiveTab("person")}
+          >
+            <Ionicons
+              name="walk"
+              size={22}
+              color={activeTab === "person" ? H : "#fff"}
+            />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.tab}>
-            <Ionicons name="cube-outline" size={20} color="#fff" />
+          <TouchableOpacity
+            style={[styles.tab, activeTab === "package" && styles.tabActive]}
+            onPress={() => setActiveTab("package")}
+          >
+            <Ionicons
+              name="cube-outline"
+              size={22}
+              color={activeTab === "package" ? H : "#fff"}
+            />
           </TouchableOpacity>
         </View>
+      </View>
 
-        <Text style={styles.pageTitle}>REGISTRO DE VISITA</Text>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* título centrado y azul */}
+        <Text style={styles.pageTitle}>REGISTRO DE VISITA3</Text>
 
-        {/* CAMPOS */}
+        {/* CAMPOS con más margen a los lados */}
         <TextInput
           placeholder="*DONDE"
           placeholderTextColor="#999"
@@ -73,14 +102,14 @@ export default function RegistroVisita() {
           onChangeText={setNombre}
         />
 
-        {/* FOTOGRAFÍAS */}
+        {/* FOTOGRAFÍAS más grande */}
         <Text style={styles.fotoLabel}>FOTOGRAFIAS DEL ACCESO</Text>
         <View style={styles.fotoRow}>
           <TouchableOpacity style={styles.fotoBtn}>
-            <Ionicons name="card" size={28} color="#fff" />
+            <Ionicons name="card" size={30} color="#fff" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.fotoBtn}>
-            <Ionicons name="car" size={28} color="#fff" />
+            <Ionicons name="car" size={30} color="#fff" />
           </TouchableOpacity>
         </View>
 
@@ -94,35 +123,52 @@ export default function RegistroVisita() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f5f5f5" },
+  safe: {
+    flex: 1,
+  },
+
+  /* header con título centrado */
   header: {
-    backgroundColor: "#1a4a6b",
+    backgroundColor: H,
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 16,
     paddingHorizontal: 20,
-    gap: 12,
   },
   headerIcon: {
     backgroundColor: "rgba(255,255,255,0.15)",
     borderRadius: 50,
     padding: 8,
+    width: 50,
+    alignItems: "center",
   },
   headerTitle: {
+    flex: 1,
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
     letterSpacing: 1,
+    textAlign: "center",
   },
-  container: { padding: 20, paddingBottom: 40 },
+  headerSpacer: {
+    width: 50, // mismo ancho que el ícono para centrar el texto
+  },
+
+  /* tabs sobre fondo azul */
+  tabsContainer: {
+    backgroundColor: H,
+    alignItems: "center",
+    paddingBottom: 14,
+  },
   tabs: {
     flexDirection: "row",
-    backgroundColor: "#1a4a6b",
+    backgroundColor: H,
     borderRadius: 30,
     alignSelf: "center",
     padding: 4,
     gap: 4,
-    marginBottom: 20,
+    borderWidth: 1.5,
+    borderColor: "rgba(255,255,255,0.3)",
   },
   tab: {
     padding: 10,
@@ -131,14 +177,26 @@ const styles = StyleSheet.create({
   tabActive: {
     backgroundColor: "#fff",
   },
+
+  /* body blanco */
+  container: {
+    backgroundColor: "#fff",
+    paddingHorizontal: 24, // más separado de los lados
+    paddingTop: 24,
+    paddingBottom: 40,
+  },
+
+  /* título centrado y azul */
   pageTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#1a4a6b",
+    fontSize: 15,
+    fontWeight: "800",
+    color: H, // azul
     marginBottom: 20,
     textAlign: "center",
     letterSpacing: 1,
   },
+
+  /* inputs más separados de los lados */
   input: {
     backgroundColor: "#e8e8e8",
     borderRadius: 8,
@@ -148,28 +206,33 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#333",
   },
+
+  /* fotografías más grande y más separadas */
   fotoLabel: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: "#444",
+    fontSize: 15, // más grande
+    fontWeight: "700",
+    color: "#333",
     marginTop: 8,
-    marginBottom: 12,
+    marginBottom: 16,
   },
   fotoRow: {
     flexDirection: "row",
-    gap: 16,
+    gap: 40, // más separados
     marginBottom: 30,
+    justifyContent: "center",
   },
   fotoBtn: {
-    backgroundColor: "#1a4a6b",
-    width: 70,
-    height: 70,
-    borderRadius: 35,
+    backgroundColor: H,
+    width: 74,
+    height: 74,
+    borderRadius: 37,
     alignItems: "center",
     justifyContent: "center",
   },
+
+  /* botón registrar */
   registerBtn: {
-    backgroundColor: "#1a4a6b",
+    backgroundColor: H,
     paddingVertical: 16,
     borderRadius: 30,
     alignItems: "center",
