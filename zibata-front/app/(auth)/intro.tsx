@@ -17,7 +17,7 @@ export default function Intro() {
   return (
     <View style={styles.container}>
       <Video
-        source={require("../assets/videos/intro.mp4")}
+        source={require("../../assets/videos/intro.mp4")}
         style={styles.video}
         resizeMode={ResizeMode.CONTAIN}
         shouldPlay
@@ -30,7 +30,7 @@ export default function Intro() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fcfcfc", // fondo blanco
+    backgroundColor: "#fcfcfc",
     justifyContent: "center",
     alignItems: "center",
   },

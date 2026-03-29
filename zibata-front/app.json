@@ -8,9 +8,11 @@
     "scheme": "zibatafront",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+
     "ios": {
       "supportsTablet": true
     },
+
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/zibata.png",
@@ -28,20 +30,25 @@
         "android.permission.RECORD_AUDIO"
       ]
     },
+
     "web": {
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
+
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
+          "image": "./assets/images/splash.png",
+          "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
       ],
@@ -54,16 +61,19 @@
       "@react-native-community/datetimepicker",
       "expo-video"
     ],
+
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
     },
+
     "extra": {
       "router": {},
       "eas": {
         "projectId": "26b688f6-1446-49ef-8bc9-ffe2d565f5c7"
       }
     },
+
     "owner": "alfredanderz"
   }
 }
