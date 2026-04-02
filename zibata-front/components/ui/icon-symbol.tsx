@@ -38,6 +38,7 @@ const MAPPING = {
   'figure.walk': 'directions-walk',
   'person.text.rectangle': 'badge',
   'package.fill': 'inventory', 
+  'checkmark': 'check',
 } as IconMapping;
 
 /**
