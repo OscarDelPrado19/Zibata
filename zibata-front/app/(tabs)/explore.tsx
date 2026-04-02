@@ -7,27 +7,35 @@ import {
 import { ThemedView } from '@/components/themed-view';
 import {
   VEHICLE_PROPERTY_DEFAULT,
-  VEHICLE_RECORDS,
   VehiclesColors,
 } from '@/constants/features/vehicles';
+import { useVehiclesStore } from '@/hooks/features/vehicles-store';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ExploreScreen(): React.ReactElement {
+  const router = useRouter();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const colors = VehiclesColors[isDark ? 'dark' : 'light'];
+  const { vehicles } = useVehiclesStore();
 
   const handlePressAdd = useCallback(() => {
-    // Se deja listo para conectar el modal de registro de vehiculos.
-  }, []);
+    router.push('/modal/registro-vehiculo' as any);
+  }, [router]);
 
   const handlePressBack = useCallback(() => {
-    // Placeholder visual: la pantalla es un tab raiz.
-  }, []);
+    if (router.canGoBack()) {
+      router.back();
+      return;
+    }
+
+    router.replace('/(tabs)' as any);
+  }, [router]);
 
   const handlePressInfo = useCallback(() => {
     // Placeholder visual: informacion pendiente de definicion funcional.
@@ -63,7 +71,7 @@ export default function ExploreScreen(): React.ReactElement {
           />
 
           <VehicleList
-            vehicles={VEHICLE_RECORDS}
+            vehicles={vehicles}
             cardBackground={colors.cardBg}
             textColor={colors.primaryText}
             mutedTextColor={colors.mutedText}
