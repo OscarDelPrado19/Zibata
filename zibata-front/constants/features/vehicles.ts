@@ -33,6 +33,13 @@ export const VehiclesColors = {
 
 export const VEHICLE_PROPERTY_DEFAULT = 'INMUEBLE L1 P01';
 
+export const VEHICLE_PROPERTY_OPTIONS = [
+  { label: 'TODOS LOS INMUEBLES', value: 'TODOS LOS INMUEBLES' },
+  { label: 'INMUEBLE L1 P01', value: 'INMUEBLE L1 P01' },
+  { label: 'INMUEBLE L1 P02', value: 'INMUEBLE L1 P02' },
+  { label: 'INMUEBLE L2 P10', value: 'INMUEBLE L2 P10' },
+] as const;
+
 export const VEHICLE_RECORDS: VehicleRecord[] = [
   {
     id: '1',

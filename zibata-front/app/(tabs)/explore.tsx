@@ -7,13 +7,15 @@ import {
 import { ThemedView } from '@/components/themed-view';
 import {
   VEHICLE_PROPERTY_DEFAULT,
+  VEHICLE_PROPERTY_OPTIONS,
   VehiclesColors,
 } from '@/constants/features/vehicles';
 import { useVehiclesStore } from '@/hooks/features/vehicles-store';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import type { VehicleRecord } from '@/types';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -23,6 +25,7 @@ export default function ExploreScreen(): React.ReactElement {
   const isDark = colorScheme === 'dark';
   const colors = VehiclesColors[isDark ? 'dark' : 'light'];
   const { vehicles } = useVehiclesStore();
+  const [selectedProperty, setSelectedProperty] = useState<string>(VEHICLE_PROPERTY_DEFAULT);
 
   const handlePressAdd = useCallback(() => {
     router.push('/modal/registro-vehiculo' as any);
@@ -41,9 +44,24 @@ export default function ExploreScreen(): React.ReactElement {
     // Placeholder visual: informacion pendiente de definicion funcional.
   }, []);
 
-  const handlePressProperty = useCallback(() => {
-    // Placeholder visual: selector de inmueble pendiente de integracion.
+  const handlePropertyChange = useCallback((value: string) => {
+    setSelectedProperty(value);
   }, []);
+
+  const handlePressVehicle = useCallback((vehicle: VehicleRecord) => {
+    router.push({
+      pathname: '/modal/detalle-vehiculo' as any,
+      params: { id: vehicle.id },
+    });
+  }, [router]);
+
+  const visibleVehicles = useMemo(() => {
+    if (selectedProperty === 'TODOS LOS INMUEBLES') {
+      return vehicles;
+    }
+
+    return vehicles.filter((vehicle) => vehicle.property === selectedProperty);
+  }, [selectedProperty, vehicles]);
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
@@ -59,7 +77,11 @@ export default function ExploreScreen(): React.ReactElement {
         <ThemedView style={[styles.section, { backgroundColor: colors.surfaceBg }]}> 
           <VehicleFilters
             title="REGISTRO DE VEHÍCULOS"
-            propertyLabel={VEHICLE_PROPERTY_DEFAULT}
+            propertyLabel={selectedProperty}
+            propertyOptions={VEHICLE_PROPERTY_OPTIONS.map((option) => ({
+              label: option.label,
+              value: option.value,
+            }))}
             surfaceColor={colors.surfaceBg}
             pillColor={colors.pillBg}
             textColor={colors.primaryText}
@@ -67,14 +89,15 @@ export default function ExploreScreen(): React.ReactElement {
             mutedTextColor={colors.mutedText}
             onBackPress={handlePressBack}
             onInfoPress={handlePressInfo}
-            onPropertyPress={handlePressProperty}
+            onPropertyChange={handlePropertyChange}
           />
 
           <VehicleList
-            vehicles={vehicles}
+            vehicles={visibleVehicles}
             cardBackground={colors.cardBg}
             textColor={colors.primaryText}
             mutedTextColor={colors.mutedText}
+            onVehiclePress={handlePressVehicle}
           />
         </ThemedView>
 
