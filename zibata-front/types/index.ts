@@ -59,6 +59,26 @@ export interface Provider {
   company?: string;
 }
 
+export interface VehicleRecord {
+  id: string;
+  label: string;
+  status: string;
+  statusColor: string;
+  brand?: string;
+  model?: string;
+  color?: string;
+  year?: string;
+  plates?: string;
+  property?: string;
+  ownerType?: string;
+  vehicleType?: string;
+  hasCirculationCard?: boolean;
+  hasOfficialId?: boolean;
+  circulationCardImageUri?: string;
+  officialIdImageUri?: string;
+  createdAt?: string;
+}
+
 export type ColorScheme = 'light' | 'dark';
 
 export interface ThemedColors {

@@ -23,8 +23,10 @@ const MAPPING = {
   'megaphone.fill': 'campaign',
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
+  'chevron.left': 'chevron-left',
   'chevron.right': 'chevron-right',
   'chevron.down': 'expand-more',
+  'info.circle.fill': 'info',
   'camera.fill': 'photo-camera',
   'video.fill': 'videocam',
   'checkmark.circle.fill': 'check',
@@ -36,6 +38,7 @@ const MAPPING = {
   'figure.walk': 'directions-walk',
   'person.text.rectangle': 'badge',
   'package.fill': 'inventory', 
+  'checkmark': 'check',
 } as IconMapping;
 
 /**

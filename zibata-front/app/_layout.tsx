@@ -10,6 +10,7 @@ import "react-native-reanimated";
 
 import { AccessControlProvider } from "@/hooks/features/access-control-store";
 import { IncidentsProvider } from "@/hooks/features/incidents-store";
+import { VehiclesProvider } from "@/hooks/features/vehicles-store";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 
 export default function RootLayout(): React.ReactElement {
@@ -20,33 +21,43 @@ export default function RootLayout(): React.ReactElement {
   return (
     <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
       <IncidentsProvider>
-        <AccessControlProvider>
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="intro" />
-            <Stack.Screen name="login" />
-            <Stack.Screen name="(tabs)" />
+        <VehiclesProvider>
+          <AccessControlProvider>
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="intro" />
+              <Stack.Screen name="login" />
+              <Stack.Screen name="(tabs)" />
 
-            <Stack.Screen
-              name="modal/crear-incidencia"
-              options={{ presentation: "modal" }}
-            />
-            <Stack.Screen
-              name="modal/registro-visita"
-              options={{ presentation: "modal" }}
-            />
-            <Stack.Screen
-              name="modal/registro-empleado"
-              options={{ presentation: "modal" }}
-            />
-            <Stack.Screen
-              name="modal/registro-proveedor"
-              options={{ presentation: "modal" }}
-            />
-            <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-          </Stack>
+              <Stack.Screen
+                name="modal/crear-incidencia"
+                options={{ presentation: "modal" }}
+              />
+              <Stack.Screen
+                name="modal/registro-visita"
+                options={{ presentation: "modal" }}
+              />
+              <Stack.Screen
+                name="modal/registro-empleado"
+                options={{ presentation: "modal" }}
+              />
+              <Stack.Screen
+                name="modal/registro-proveedor"
+                options={{ presentation: "modal" }}
+              />
+              <Stack.Screen
+                name="modal/registro-vehiculo"
+                options={{ presentation: "modal" }}
+              />
+              <Stack.Screen
+                name="modal/detalle-vehiculo"
+                options={{ presentation: "modal" }}
+              />
+              <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+            </Stack>
 
-          <StatusBar style={statusBarStyle} hidden={false} />
-        </AccessControlProvider>
+            <StatusBar style={statusBarStyle} hidden={false} />
+          </AccessControlProvider>
+        </VehiclesProvider>
       </IncidentsProvider>
     </ThemeProvider>
   );
