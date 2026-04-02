@@ -5,13 +5,14 @@
 import { ThemedText } from '@/components/themed-text';
 import type { VehicleRecord } from '@/types';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface VehicleCardProps {
   vehicle: VehicleRecord;
   backgroundColor: string;
   textColor: string;
   mutedTextColor: string;
+  onPress?: (vehicle: VehicleRecord) => void;
 }
 
 export const VehicleCard: React.FC<VehicleCardProps> = ({
@@ -19,15 +20,22 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   backgroundColor,
   textColor,
   mutedTextColor,
+  onPress,
 }) => {
   return (
-    <View style={[styles.card, { backgroundColor }]}> 
+    <TouchableOpacity
+      style={[styles.card, { backgroundColor }]}
+      onPress={() => onPress?.(vehicle)}
+      activeOpacity={0.85}
+      accessibilityRole="button"
+      accessibilityLabel={`Ver detalle de ${vehicle.label}`}
+    >
       <View style={[styles.statusBar, { backgroundColor: vehicle.statusColor }]} />
       <View style={styles.textBlock}>
         <ThemedText style={[styles.label, { color: textColor }]}>{vehicle.label}</ThemedText>
         <ThemedText style={[styles.status, { color: mutedTextColor }]}>{vehicle.status}</ThemedText>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

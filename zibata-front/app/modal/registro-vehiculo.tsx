@@ -228,6 +228,8 @@ export default function RegistroVehiculoModal(): React.ReactElement {
       vehicleType,
       hasCirculationCard: Boolean(circulationCardImage),
       hasOfficialId: Boolean(officialIdImage),
+      circulationCardImageUri: circulationCardImage ?? undefined,
+      officialIdImageUri: officialIdImage ?? undefined,
     });
 
     router.back();

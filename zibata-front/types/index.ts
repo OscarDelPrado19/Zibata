@@ -74,6 +74,8 @@ export interface VehicleRecord {
   vehicleType?: string;
   hasCirculationCard?: boolean;
   hasOfficialId?: boolean;
+  circulationCardImageUri?: string;
+  officialIdImageUri?: string;
   createdAt?: string;
 }
 

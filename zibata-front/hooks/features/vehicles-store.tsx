@@ -13,6 +13,8 @@ export type CreateVehicleInput = {
   vehicleType: string;
   hasCirculationCard: boolean;
   hasOfficialId: boolean;
+  circulationCardImageUri?: string;
+  officialIdImageUri?: string;
 };
 
 type VehiclesStoreValue = {
@@ -49,6 +51,8 @@ export const VehiclesProvider = ({ children }: { children: React.ReactNode }): R
       vehicleType: normalizeText(payload.vehicleType),
       hasCirculationCard: payload.hasCirculationCard,
       hasOfficialId: payload.hasOfficialId,
+      circulationCardImageUri: payload.circulationCardImageUri,
+      officialIdImageUri: payload.officialIdImageUri,
       createdAt: new Date().toISOString(),
     };
 

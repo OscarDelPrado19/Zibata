@@ -12,6 +12,7 @@ interface VehicleListProps {
   cardBackground: string;
   textColor: string;
   mutedTextColor: string;
+  onVehiclePress?: (vehicle: VehicleRecord) => void;
 }
 
 export const VehicleList: React.FC<VehicleListProps> = ({
@@ -19,6 +20,7 @@ export const VehicleList: React.FC<VehicleListProps> = ({
   cardBackground,
   textColor,
   mutedTextColor,
+  onVehiclePress,
 }) => {
   return (
     <ScrollView
@@ -33,6 +35,7 @@ export const VehicleList: React.FC<VehicleListProps> = ({
           backgroundColor={cardBackground}
           textColor={textColor}
           mutedTextColor={mutedTextColor}
+          onPress={onVehiclePress}
         />
       ))}
     </ScrollView>

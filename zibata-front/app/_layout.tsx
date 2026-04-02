@@ -48,6 +48,10 @@ export default function RootLayout(): React.ReactElement {
                 name="modal/registro-vehiculo"
                 options={{ presentation: "modal" }}
               />
+              <Stack.Screen
+                name="modal/detalle-vehiculo"
+                options={{ presentation: "modal" }}
+              />
               <Stack.Screen name="modal" options={{ presentation: "modal" }} />
             </Stack>
 
