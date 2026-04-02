@@ -59,6 +59,13 @@ export interface Provider {
   company?: string;
 }
 
+export interface VehicleRecord {
+  id: string;
+  label: string;
+  status: string;
+  statusColor: string;
+}
+
 export type ColorScheme = 'light' | 'dark';
 
 export interface ThemedColors {
