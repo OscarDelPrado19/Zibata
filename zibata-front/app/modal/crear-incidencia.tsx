@@ -22,6 +22,11 @@ type MediaItem = {
   uri: string;
 };
 
+type SelectOption = {
+  label: string;
+  value: string;
+};
+
 
 const CATEGORY_OPTIONS = ['EXTERNO', 'INTERNO'] as const;
 const REASON_OPTIONS = [INCIDENT_TYPES.MAINTENANCE, INCIDENT_TYPES.POWER_FAILURE, INCIDENT_TYPES.OTHER] as const;
@@ -61,11 +66,28 @@ export default function CrearIncidenciaModal(): React.ReactElement {
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [videos, setVideos] = useState<string[]>([]);
-  const [showCategoryModal, setShowCategoryModal] = useState<boolean>(false);
-  const [showReasonModal, setShowReasonModal] = useState<boolean>(false);
+  const [activeOptions, setActiveOptions] = useState<SelectOption[] | null>(null);
+  const [activeSetter, setActiveSetter] = useState<((value: string) => void) | null>(null);
   const [showLocationPicker, setShowLocationPicker] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
   const [showAlert, setShowAlert] = useState<boolean>(false);
+
+  const openSelect = (options: SelectOption[], setter: (value: string) => void): void => {
+    setActiveOptions(options);
+    setActiveSetter(() => setter);
+  };
+
+  const closeSelect = (): void => {
+    setActiveOptions(null);
+    setActiveSetter(null);
+  };
+
+  const handleSelect = (value: string): void => {
+    if (activeSetter) {
+      activeSetter(value);
+    }
+    closeSelect();
+  };
 
   const openAlert = (message: string): void => {
     setAlertMessage(message);
@@ -155,17 +177,21 @@ export default function CrearIncidenciaModal(): React.ReactElement {
         <ThemedText type="defaultSemiBold" style={styles.label}>Categoría</ThemedText>
         <TouchableOpacity
           style={[styles.select, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}
-          onPress={() => setShowCategoryModal(true)}
+          onPress={() => openSelect(CATEGORY_OPTIONS.map((item) => ({ label: item, value: item })), setCategory)}
+          activeOpacity={0.8}
         >
           <ThemedText>{category || 'Seleccione categoría'}</ThemedText>
+          <IconSymbol size={16} name="chevron.down" color={isDark ? '#9CA3AF' : '#6B7280'} />
         </TouchableOpacity>
 
         <ThemedText type="defaultSemiBold" style={styles.label}>Motivo</ThemedText>
         <TouchableOpacity
           style={[styles.select, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}
-          onPress={() => setShowReasonModal(true)}
+          onPress={() => openSelect(REASON_OPTIONS.map((item) => ({ label: item, value: item })), setReason)}
+          activeOpacity={0.8}
         >
           <ThemedText>{reason || 'Seleccione motivo'}</ThemedText>
+          <IconSymbol size={16} name="chevron.down" color={isDark ? '#9CA3AF' : '#6B7280'} />
         </TouchableOpacity>
 
         <ThemedText type="defaultSemiBold" style={styles.label}>Ubicación</ThemedText>
@@ -245,40 +271,25 @@ export default function CrearIncidenciaModal(): React.ReactElement {
         style={[styles.submitFab, { bottom: insets.bottom + 20 }]}
       />
 
-      {/* Modales simples para seleccionar categoría/motivo */}
-      <Modal visible={showCategoryModal} transparent animationType="slide">
-        <View style={styles.optionModalOverlay}>
-          <View style={[styles.optionModal, { backgroundColor: colors.cardBg }]}>
-            <FlatList
-              data={CATEGORY_OPTIONS}
-              keyExtractor={(i) => i}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => { setCategory(item); setShowCategoryModal(false); }} style={styles.optionItem}>
-                  <ThemedText>{item}</ThemedText>
-                </TouchableOpacity>
-              )}
-            />
-            <TouchableOpacity onPress={() => setShowCategoryModal(false)} style={styles.optionCancel}>
-              <ThemedText>Cancelar</ThemedText>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      <Modal visible={showReasonModal} transparent animationType="slide">
-        <View style={styles.optionModalOverlay}>
-          <View style={[styles.optionModal, { backgroundColor: colors.cardBg }]}>
-            <FlatList
-              data={REASON_OPTIONS}
-              keyExtractor={(i) => i}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => { setReason(item); setShowReasonModal(false); }} style={styles.optionItem}>
-                  <ThemedText>{item}</ThemedText>
-                </TouchableOpacity>
-              )}
-            />
-            <TouchableOpacity onPress={() => setShowReasonModal(false)} style={styles.optionCancel}>
-              <ThemedText>Cancelar</ThemedText>
+      <Modal visible={Boolean(activeOptions)} transparent animationType="fade">
+        <View style={styles.optionOverlay}>
+          <View style={[styles.optionCard, { backgroundColor: colors.cardBg }]}>
+            {activeOptions?.map((option) => (
+              <TouchableOpacity
+                key={option.value}
+                style={styles.optionItem}
+                onPress={() => handleSelect(option.value)}
+                activeOpacity={0.8}
+              >
+                <ThemedText style={styles.optionText}>{option.label}</ThemedText>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity
+              style={[styles.optionItem, styles.optionCancel]}
+              onPress={closeSelect}
+              activeOpacity={0.8}
+            >
+              <ThemedText style={[styles.optionText, styles.optionCancelText]}>CANCELAR</ThemedText>
             </TouchableOpacity>
           </View>
         </View>
@@ -329,6 +340,9 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   select: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     borderWidth: 1,
     borderRadius: 8,
     padding: 12,
@@ -463,23 +477,35 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignSelf: 'center',
   },
-  optionModalOverlay: {
+  optionOverlay: {
     flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0,0,0,0.4)',
   },
-  optionModal: {
-    maxHeight: 360,
-    padding: 12,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
+  optionCard: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 24,
   },
   optionItem: {
-    paddingVertical: 12,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  optionText: {
+    fontSize: 14,
+    fontWeight: '600',
+    textAlign: 'center',
+    color: '#111827',
   },
   optionCancel: {
-    paddingVertical: 12,
-    alignItems: 'center',
+    borderBottomWidth: 0,
+    marginTop: 8,
+  },
+  optionCancelText: {
+    color: '#EF4444',
   },
   alertOverlay: {
     flex: 1,
