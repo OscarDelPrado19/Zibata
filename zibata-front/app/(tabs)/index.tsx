@@ -1,16 +1,21 @@
+import ControlAccesoScreen from "@/components/features/access-control/control-acceso-screen";
+import IncidenciasScreen from "@/components/features/incidents/incidencias-screen";
+import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
+import { usePathname } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
 import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
+  BackHandler,
+  DeviceEventEmitter,
   Dimensions,
   FlatList,
   StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import React, { useState, useCallback } from "react";
 
 const { width } = Dimensions.get("window");
 
@@ -92,7 +97,7 @@ const PENDING_PAYMENTS: Payment[] = [
   },
   {
     id: "p3",
-    title: "CUOTA MANTENIMIENTO ZIBATA VIVIENDA",
+    title: "CUOTA MANTENIMIENTO ZIBATA VIVIENDA",  
     date: "01/10/2025",
     amount: 600.0,
   },
@@ -482,7 +487,28 @@ const pagosStyles = StyleSheet.create({
 
 // ─── Menu Items ───────────────────────────────────────────────────────────────
 
-const menuItems = [
+type MenuLabel =
+  | "INCIDENCIA"
+  | "AMENIDADES"
+  | "ACCESOS"
+  | "PAGOS"
+  | "CHAT"
+  | "AVISOS";
+
+type HomeScreenKey = "PAGOS" | "INCIDENCIA" | "ACCESOS";
+
+interface MenuItem {
+  icon: React.ReactElement;
+  label: MenuLabel;
+}
+
+const MENU_SCREEN_BY_LABEL: Partial<Record<MenuLabel, HomeScreenKey>> = {
+  PAGOS: "PAGOS",
+  INCIDENCIA: "INCIDENCIA",
+  ACCESOS: "ACCESOS",
+};
+
+const menuItems: MenuItem[] = [
   {
     icon: <MaterialCommunityIcons name="bell-alert" size={30} color="white" />,
     label: "INCIDENCIA",
@@ -517,17 +543,53 @@ const menuItems = [
 // ─── Home Screen ──────────────────────────────────────────────────────────────
 
 export default function HomeScreen() {
-  const [currentScreen, setCurrentScreen] = useState<string | null>(null);
+  const [currentScreen, setCurrentScreen] = useState<HomeScreenKey | null>(null);
+  const pathname = usePathname();
 
-  const handleMenuPress = (label: string) => {
-    if (label === "PAGOS") {
-      setCurrentScreen("PAGOS");
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener("home-tab-pressed", () => {
+      setCurrentScreen(null);
+    });
+
+    return () => subscription.remove();
+  }, []);
+
+  useEffect(() => {
+    const subscription = BackHandler.addEventListener("hardwareBackPress", () => {
+      // Deja que Expo Router maneje primero los modales del stack.
+      if (pathname.startsWith("/modal/")) {
+        return false;
+      }
+
+      if (currentScreen !== null) {
+        setCurrentScreen(null);
+        return true;
+      }
+
+      return false;
+    });
+
+    return () => subscription.remove();
+  }, [currentScreen, pathname]);
+
+  const handleMenuPress = (label: MenuLabel): void => {
+    const nextScreen = MENU_SCREEN_BY_LABEL[label];
+    if (nextScreen) {
+      setCurrentScreen(nextScreen);
     }
     // otros módulos aquí después
   };
 
   if (currentScreen === "PAGOS") {
     return <ControlPagosScreen onBack={() => setCurrentScreen(null)} />;
+  }
+
+  if (currentScreen === "INCIDENCIA") {
+    return <IncidenciasScreen />;
+  }
+
+  if (currentScreen === "ACCESOS") {
+    return <ControlAccesoScreen />;
   }
 
   return (

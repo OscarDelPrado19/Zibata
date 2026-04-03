@@ -41,6 +41,12 @@ export interface AccessCredential {
   name: string;
   date: string;
   statusColor: string;
+  folio?: string;
+  property?: string;
+  visitorCount?: number;
+  accessType?: string;
+  transportType?: string;
+  qrValue?: string;
 }
 
 export interface Employee {

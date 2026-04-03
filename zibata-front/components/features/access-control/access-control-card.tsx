@@ -6,13 +6,14 @@ import { ThemedText } from '@/components/themed-text';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import type { AccessCredential } from '@/types';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface AccessControlCardProps {
   credential: AccessCredential;
   backgroundColor: string;
   textColor: string;
   mutedTextColor: string;
+  onPress?: (credential: AccessCredential) => void;
 }
 
 export const AccessControlCard: React.FC<AccessControlCardProps> = ({
@@ -20,9 +21,15 @@ export const AccessControlCard: React.FC<AccessControlCardProps> = ({
   backgroundColor,
   textColor,
   mutedTextColor,
+  onPress,
 }) => {
   return (
-    <View style={[styles.card, { backgroundColor }]}>
+    <TouchableOpacity
+      style={[styles.card, { backgroundColor }]}
+      onPress={() => onPress?.(credential)}
+      activeOpacity={0.85}
+      disabled={!onPress}
+    >
       <View style={[styles.statusBar, { backgroundColor: credential.statusColor }]} />
       <View style={styles.content}>
         <View style={styles.iconBadge}>
@@ -33,7 +40,7 @@ export const AccessControlCard: React.FC<AccessControlCardProps> = ({
           <ThemedText style={[styles.date, { color: mutedTextColor }]}>{credential.date}</ThemedText>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

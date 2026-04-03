@@ -73,7 +73,13 @@ export const ACCESS_CREDENTIALS: AccessCredential[] = [
   {
     id: '1',
     name: 'PRUEBA PRUEBA',
-    date: '19-09-2025',
+    date: '2026-01-26',
     statusColor: '#FDE047',
+    folio: '2026-01-26/30422 22:17:03',
+    property: 'DISCOVERY CENTER SN',
+    visitorCount: 1,
+    accessType: 'HOY',
+    transportType: 'OTRO',
+    qrValue: 'ZIBATA|FOLIO:2026-01-26/30422 22:17:03|VISITANTE:PRUEBA PRUEBA',
   },
 ];
