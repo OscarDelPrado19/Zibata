@@ -39,6 +39,7 @@ const MAPPING = {
   'person.text.rectangle': 'badge',
   'package.fill': 'inventory', 
   'checkmark': 'check',
+  'clock.fill': 'access-time',
 } as IconMapping;
 
 /**

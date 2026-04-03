@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { DeviceEventEmitter, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { HapticTab } from '@/components/haptic-tab';
@@ -49,6 +49,11 @@ export default function TabLayout() {
       }}>
       <Tabs.Screen
         name="index"
+        listeners={{
+          tabPress: () => {
+            DeviceEventEmitter.emit('home-tab-pressed');
+          },
+        }}
         options={{
           title: 'Inicio',
           tabBarIcon: ({ color, focused }) => (
@@ -94,22 +99,6 @@ export default function TabLayout() {
       />
       
       <Tabs.Screen
-        name="control-acceso"
-        options={{
-          title: 'Acceso',
-          tabBarIcon: ({ color, focused }) => (
-            <View style={[styles.iconContainer, focused && styles.iconContainerFocused]}>
-              <IconSymbol
-                size={26}
-                name="key.fill"
-                color={color}
-              />
-            </View>
-          ),
-        }}
-      />
-
-      <Tabs.Screen
         name="menu"
         options={{
           title: 'Menu',
@@ -122,6 +111,13 @@ export default function TabLayout() {
               />
             </View>
           ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="acerca-de"
+        options={{
+          href: null,
         }}
       />
     </Tabs>

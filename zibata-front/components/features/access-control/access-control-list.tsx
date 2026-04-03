@@ -13,6 +13,7 @@ interface AccessControlListProps {
   cardBackground: string;
   textColor: string;
   mutedTextColor: string;
+  onCredentialPress?: (credential: AccessCredential) => void;
 }
 
 export const AccessControlList: React.FC<AccessControlListProps> = ({
@@ -20,6 +21,7 @@ export const AccessControlList: React.FC<AccessControlListProps> = ({
   cardBackground,
   textColor,
   mutedTextColor,
+  onCredentialPress,
 }) => {
   if (credentials.length === 0) {
     return (
@@ -38,6 +40,7 @@ export const AccessControlList: React.FC<AccessControlListProps> = ({
           backgroundColor={cardBackground}
           textColor={textColor}
           mutedTextColor={mutedTextColor}
+          onPress={onCredentialPress}
         />
       ))}
     </ScrollView>

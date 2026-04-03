@@ -85,11 +85,20 @@ export const AccessControlProvider = ({ children }: { children: React.ReactNode 
   }, []);
 
   const addVisit = useCallback((payload: CreateVisitInput): AccessCredential => {
+    const fullName = buildFullName(payload.firstName, payload.lastName, payload.motherLastName);
+    const dateIso = payload.visitDate.toISOString().slice(0, 10);
+    const folioSuffix = String(Math.floor(Math.random() * 90000) + 10000);
     const newCredential: AccessCredential = {
       id: generateEntityId(),
-      name: buildFullName(payload.firstName, payload.lastName, payload.motherLastName),
+      name: fullName,
       date: formatListDate(payload.visitDate),
       statusColor: '#FDE047',
+      folio: `${dateIso}/${folioSuffix}`,
+      property: 'DISCOVERY CENTER SN',
+      visitorCount: 1,
+      accessType: 'HOY',
+      transportType: 'OTRO',
+      qrValue: `ZIBATA|FOLIO:${dateIso}/${folioSuffix}|VISITANTE:${fullName}`,
     };
 
     setCredentials((prev) => [newCredential, ...prev]);

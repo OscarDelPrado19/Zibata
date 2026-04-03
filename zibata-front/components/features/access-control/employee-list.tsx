@@ -6,13 +6,14 @@ import { ThemedText } from '@/components/themed-text';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import type { Employee } from '@/types';
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface EmployeeListProps {
   employees: Employee[];
   cardBackground: string;
   textColor: string;
   mutedTextColor: string;
+  onEmployeePress?: (employee: Employee) => void;
 }
 
 export const EmployeeList: React.FC<EmployeeListProps> = ({
@@ -20,6 +21,7 @@ export const EmployeeList: React.FC<EmployeeListProps> = ({
   cardBackground,
   textColor,
   mutedTextColor,
+  onEmployeePress,
 }) => {
   if (employees.length === 0) {
     return (
@@ -32,7 +34,13 @@ export const EmployeeList: React.FC<EmployeeListProps> = ({
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {employees.map((employee) => (
-        <View key={employee.id} style={[styles.card, { backgroundColor: cardBackground }]}>
+        <TouchableOpacity
+          key={employee.id}
+          style={[styles.card, { backgroundColor: cardBackground }]}
+          onPress={() => onEmployeePress?.(employee)}
+          activeOpacity={0.85}
+          disabled={!onEmployeePress}
+        >
           <View style={[styles.statusBar, { backgroundColor: employee.statusColor }]} />
           <View style={styles.content}>
             <View style={styles.iconBadge}>
@@ -48,7 +56,7 @@ export const EmployeeList: React.FC<EmployeeListProps> = ({
               </View>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       ))}
     </ScrollView>
   );

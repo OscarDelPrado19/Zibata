@@ -1,18 +1,22 @@
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import type { ComponentProps } from "react";
 import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
   Dimensions,
   Image,
   ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
 
 export default function MenuScreen() {
+  const router = useRouter();
+
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.drawer}>
@@ -39,6 +43,7 @@ export default function MenuScreen() {
             icon="information-outline"
             label="ACERCA DE"
             type="material"
+            onPress={() => router.push('/(tabs)/acerca-de' as any)}
           />
           <MenuItem icon="log-out-outline" label="SALIR" type="ion" />
 
@@ -57,9 +62,26 @@ export default function MenuScreen() {
   );
 }
 
-function MenuItem({ icon, label, type }) {
+type IonIconName = ComponentProps<typeof Ionicons>["name"];
+type MaterialIconName = ComponentProps<typeof MaterialCommunityIcons>["name"];
+
+type MenuItemProps =
+  | {
+      icon: IonIconName;
+      label: string;
+      type: "ion";
+      onPress?: () => void;
+    }
+  | {
+      icon: MaterialIconName;
+      label: string;
+      type: "material";
+      onPress?: () => void;
+    };
+
+function MenuItem({ icon, label, type, onPress }: MenuItemProps) {
   return (
-    <TouchableOpacity style={styles.menuItem}>
+    <TouchableOpacity style={styles.menuItem} onPress={onPress} activeOpacity={0.8}>
       {type === "ion" ? (
         <Ionicons name={icon} size={24} color="white" />
       ) : (

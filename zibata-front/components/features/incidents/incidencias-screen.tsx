@@ -1,8 +1,8 @@
 import {
-  IncidentDetailModal,
-  IncidentFAB,
-  IncidentHeader,
-  IncidentList,
+    IncidentDetailModal,
+    IncidentFAB,
+    IncidentHeader,
+    IncidentList,
 } from '@/components/features/incidents';
 import { ThemedView } from '@/components/themed-view';
 import { IncidentsColors } from '@/constants/features/incidents';

@@ -6,13 +6,14 @@ import { ThemedText } from '@/components/themed-text';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import type { Provider } from '@/types';
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface ProviderListProps {
   providers: Provider[];
   cardBackground: string;
   textColor: string;
   mutedTextColor: string;
+  onProviderPress?: (provider: Provider) => void;
 }
 
 export const ProviderList: React.FC<ProviderListProps> = ({
@@ -20,6 +21,7 @@ export const ProviderList: React.FC<ProviderListProps> = ({
   cardBackground,
   textColor,
   mutedTextColor,
+  onProviderPress,
 }) => {
   if (providers.length === 0) {
     return (
@@ -32,7 +34,13 @@ export const ProviderList: React.FC<ProviderListProps> = ({
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {providers.map((provider) => (
-        <View key={provider.id} style={[styles.card, { backgroundColor: cardBackground }]}>
+        <TouchableOpacity
+          key={provider.id}
+          style={[styles.card, { backgroundColor: cardBackground }]}
+          onPress={() => onProviderPress?.(provider)}
+          activeOpacity={0.85}
+          disabled={!onProviderPress}
+        >
           <View style={[styles.statusBar, { backgroundColor: provider.statusColor }]} />
           <View style={styles.content}>
             <View style={styles.iconBadge}>
@@ -48,7 +56,7 @@ export const ProviderList: React.FC<ProviderListProps> = ({
               </View>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       ))}
     </ScrollView>
   );
